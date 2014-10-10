@@ -10,17 +10,125 @@ public class BigNumber {
 	
 	protected ArrayList<Integer> digits;
 	
-	protected BigNumber() {
-		digits = new ArrayList<Integer>();
-	}
+    /**
+     * Constructor for class BigNumber. Transforms a string argument into an
+     * ArrayList of Integers. This assumes (as of current version) that the String
+     * contains only numbers and no characters.
+     * 
+     * @param s : a String of numbers
+     */
+    public BigNumber(String s) {
+        digits = new ArrayList<Integer>();
+        //fill the newly created ArrayList of Integers
+        fillNumbers(s);
+        //set the lastIndex of the ArrayList(currently broken)
+        //lastIndex = numbers.size()-1;
+    
+    }
 	
-	public BigNumber(String num) {
-		
-	}
 	
+    /**
+     * Private Constructor for class BigNumber used only by BigNumber. Instantiates
+     * a new clean BigNumber for use in putting the resulting values of the 
+     * mathematical operations into.
+     */
+    protected BigNumber() {
+        digits = new ArrayList<Integer>();
+    }
+	
+    /**
+     * Fills an ArrayList with Integers, given the String, starting with the least 
+     * significant number first. Converts the string into an Integer before 
+     * putting it into the ArrayList. Assumes that the string contains only 
+     * numbers.
+     * 
+     * @param s : the String to be put into the ArrayList.
+     */
+    private void fillNumbers(String s) {
+        Integer num;
+        //start with the rightmost character of the string
+        for(int i=s.length()-1; i>=0; i--) {
+            //put the least significant digits in first
+            num = new Integer(s.charAt(i)-48); //s.char(i)-48 will return numbers 0-9
+            digits.add(num);
+        }
+    }
+    
 	public BigNumber(int num) {
 		
 	}
+	
+    /**
+     * Adds two BigNumbers together. Takes this BigNumber and a new BigNumber
+     * bigN, adds the individual numbers in each slot of the ArrayList starting
+     * with the least most significant digit, and puts the result into a new 
+     * BigNumber result, which is then returned.
+     * 
+     * @param bigN : BigNumber to be added to this BigNumber
+     * @return result : The resulting BigNumber of the addition of this BigNumber
+     *          and bigN.
+     */
+    protected BigNumber add(BigNumber bigN) {
+        //create a new empty BigNumber object
+        BigNumber result = new BigNumber();
+        //used for when the result is over 9. carryover is the tens place holder.
+        int carryOver = 0, temp = 0;
+        //checking to make sure each BigNumber is of the same size
+        //if they are not, the smaller of the two will be 'padded'
+        //see the method pad(int n) for more details...
+        if(digits.size() > bigN.size())
+            bigN.pad(digits.size()); //bigN is smaller, so pad it til it equals digits.size()
+        else if(digits.size() < bigN.size())
+            this.pad(bigN.size()); //digits is smaller, so pad it til it equals bigN.size()
+        
+        //time to iterate through the ArrayList adding the two digits found at i.
+        for(int i=0; i<digits.size(); i++) {
+            //add the digits, storing them in temp.
+            temp = this.get(i) + bigN.get(i) + carryOver;
+            //change carryOver back to 0 to avoid any funny addition errors
+            carryOver = 0;
+            //check to see if temp is greater then 9, in which case....
+            if(temp > 9) {
+                //calculate carryOver.
+                carryOver = temp/10;
+                //calculate temp.
+                temp = temp%10;
+            }
+            //now that the digits have been added, add temp to the BigNumber result.
+            result.add(temp);
+            
+            //for some technical reasons involving tens complement....
+            //if the last number is greater than 5...make sure that it stays positive
+            //or negative, depending on what the two original BigNumbers were
+            if(temp >= 5 && (i==digits.size()-1))
+                //if both digits are negative or if one is zero, the result should still be neagetive
+                if(((digits.get(digits.size()-1)>4) && (bigN.get(digits.size()-1)>4)) || ((bigN.get(digits.size()-1)==0) || (digits.get(digits.size()-1)==0)))
+                    result.add(9); //pad a 9 at the end so it stays negative
+                //if both digits are positive or if one is nine, the result should still be postive
+                else if(((digits.get(digits.size()-1)<5) && (bigN.get(digits.size()-1)<5)) || ((bigN.get(digits.size()-1)==9) || (digits.get(digits.size()-1)==9)))
+                    result.add(0); //pad a 0 at the end so it stays positive
+        }
+        //finally return the result of the addition of the two BigNumbers
+        return result;
+    }
+    
+    /**
+     * Subtracts two BigNumbers from each other. Uses the add(BigNumber bigN)
+     * function. Negates the parameter bigN before passing it through to add(bigN).
+     * 
+     * @param bigN : BigNumber to be subtracted from this BigNumber.
+     * @return add(bigN) : the result of the subtraction
+     */
+    protected BigNumber subtract(BigNumber bigN) {
+    	if(bigN == this) return new BigNumber("0");
+    	
+        //subtracting is the same as adding a negative number, so negate the given
+        //BigNumber and pass it through to add(bigN).
+    	bigN.negate();
+        BigNumber result =  add(bigN);
+        bigN.negate(); // Negate bigN again to avoid ugly side effects
+        return result;
+    }
 	
 	/**
 	 * Compares two BigNumbers for equality.
@@ -79,15 +187,16 @@ public class BigNumber {
 		if(inc == 0) return mult; // Multiplier is 0, result is 0
 		
 		// Create a BigNumber out of the increment so we can subtract it
-		BigNumber bigInc = new BigNumber(inc);
+		BigNumber bigInc = new BigNumber(Integer.toString(inc));
 		
 		// Add this BigNumber to itself "mult" times
-		while(mult.sign() != 0) {
+		while(mult.compareTo(bigInc) != 0) {
 			result = result.add(this);
 			// Subtract one if multiplier is positive, add if negative
 			mult = mult.subtract(bigInc);
+			result.normalize();
 		}
-		
+//		result.normalize();
 		return result;
 	}
 	
@@ -148,23 +257,23 @@ public class BigNumber {
 		normalize();
 		cmp.normalize();
 		
-		int len1 = digits.size();
-		int len2 = cmp.digits.size();
-		int msb = digits.get(len1-1); // Most significant digit of this BigNumber
-		int msbcmp = cmp.digits.get(len2-1); // Most significant digit of parameter
+		int thisLen = digits.size();
+		int cmpLen = cmp.digits.size();
+		int msb = digits.get(thisLen-1); // Most significant digit of this BigNumber
+		int msbcmp = cmp.digits.get(cmpLen-1); // Most significant digit of parameter
 		
 		// This BigNumber is negative, parameter is positive
 		if(msb >= 5 && msbcmp < 5) return 1;
 		// This BigNumber is positive, param is negative
 		else if(msb < 5 && msbcmp >= 5) return -1;
-		// This BigNumber is longer, so greater than param
-		else if(len1 > len2) return 1;
-		// This is shorter, so less than param
-		else if(len1 < len2) return -1;
+		// This BigNumber is longer, so param is less
+		else if(thisLen > cmpLen) return -1;
+		// This is shorter, so param is greater
+		else if(thisLen < cmpLen) return 1;
 		
 		// Both are equal length, both either positive or negative
 		else {
-			for (int i = len1-1; i>=0; i--) {
+			for (int i = thisLen-1; i>=0; i--) {
 				int curThis = digits.get(i);
 				int curCompare = cmp.digits.get(i);
 				// Matching digit in param is greater
@@ -178,17 +287,99 @@ public class BigNumber {
 		}
 	}
 	
-	// Stubs
+    /**
+     * Returns the length of the BigNumber. Not to be confused with size() from
+     * ArrayList. As with the get(int n) and add(int n) methods, this method is
+     * intended for use by another BigNumber. Used for computational purposes.
+     * 
+     * @return the length of the BigNumber.
+     */
+    private int size() {
+        return digits.size();
+    }
+    
+    /**
+     * Gets a number from a BigNumber given the index. Not to be used in retrieving
+     * numbers in this BigNumber but rather for retrieving numbers in another
+     * bigNumber. Used for computational purposes.
+     * 
+     * @param n : index of the intended int to be retrieved.
+     * @return the int that was found.
+     */
+    private int get(int n) {
+        return digits.get(n);
+    }
+    
+    /**
+     * Adds a number to a BigNumber. Not to be used in appending numbers to this 
+     * BigNumber but rather for another BigNumber. Used for computational purposes.
+     * 
+     * @param n : int to be added.
+     */
+    private void add(int n) {
+        digits.add(n);
+    }
+    
+    /**
+     * This function will 'pad' the end of the ArrayList (or the beginning of the
+     * number) with either 0s or 9s depending on whether the number si positive
+     * or negative. Uses a comparison to another BigNumber array size to know
+     * how many digits to pad it with. Used on adding and subtracting two 
+     * BigNumbers.
+     * 
+     * @param n : the wanted size of the final array.
+     */
+    private void pad(int n) {
+        //if the last number is greater than 5...
+        if(digits.get(digits.size()-1) >= 5)
+            for(int i=digits.size(); i<n; i++)
+                //pad with 9s.
+                digits.add(9);
+        else
+            for(int i=digits.size(); i<n; i++)
+                //else pad with 0s.
+                digits.add(0);
+    }
+    
+    /**
+     * Normalize will take any leading 0s or 9s and effectively remove them if 
+     * they are unnessecary. It will not remove them in the case of say +527: 
+     * +527 will still be represented as 0527 so as to avoid it meaning 483 in
+     * tens complement.
+     */
+    private void normalize() {
+        //remove unnessacary 9s for any number starting with 5 or more
+        if(digits.size()-1 == 9)
+            //if the second to last number is still greater then 5, then the 9
+            //can be removed
+            if(digits.size()-2 >= 5) {
+                digits.remove(digits.size()-1);
+                //call this again to remove anymore 9s.
+                normalize();
+            }
+        //remove unnessacary 0s for any number starting with 4 or less
+        else if(digits.size()-1 == 0)
+            if(digits.size()-2 <= 4) {
+                //if the second to last number is still less than 4, then the 0
+                //can be removed
+                digits.remove(digits.size()-1);
+                //call this again to remove anymore 0s.
+                normalize();
+            }
+    }
 	
-	public BigNumber add(BigNumber a) {
-		return null;
-	}
-	
-	public BigNumber subtract(BigNumber s) {
-		return null;
-	}
-	
-	public void normalize() {
-		
-	}
+    /**
+     * Returns the BigNumber in String format with the most significant number 
+     * as the first in the string.
+     * 
+     * @return s : String of BigNumber.
+     */
+    public String toString() {
+        String s = "";
+        for(int i=digits.size()-1; i>=0; i--)
+            s += digits.get(i).toString();
+        s += "\n";
+        return s;
+    }
+    
 }
