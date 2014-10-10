@@ -2,6 +2,7 @@
  * This class represents a number, possibly larger than the length of an int.
  * 
  * @author Jonathan Frederickson
+ * @author Tara Crittenden
  */
 
 import java.util.ArrayList;
@@ -76,10 +77,17 @@ public class BigNumber {
         //checking to make sure each BigNumber is of the same size
         //if they are not, the smaller of the two will be 'padded'
         //see the method pad(int n) for more details...
-        if(digits.size() > bigN.size())
+        if(digits.size() > bigN.size()) {
             bigN.pad(digits.size()); //bigN is smaller, so pad it til it equals digits.size()
-        else if(digits.size() < bigN.size())
-            this.pad(bigN.size()); //digits is smaller, so pad it til it equals bigN.size()
+            //this.pad(this.size()+1);
+        }
+        else if(digits.size() < bigN.size()) {
+        	this.pad(bigN.size()); //digits is smaller, so pad it til it equals bigN.size()
+        	//bigN.pad(bigN.size()+1);
+        }
+         
+//        System.out.println(this);
+//        System.out.println(bigN);
         
         //time to iterate through the ArrayList adding the two digits found at i.
         for(int i=0; i<digits.size(); i++) {
@@ -100,14 +108,19 @@ public class BigNumber {
             //for some technical reasons involving tens complement....
             //if the last number is greater than 5...make sure that it stays positive
             //or negative, depending on what the two original BigNumbers were
-            if(temp >= 5 && (i==digits.size()-1))
+            if((i==digits.size()-1))
                 //if both digits are negative or if one is zero, the result should still be neagetive
-                if(((digits.get(digits.size()-1)>4) && (bigN.get(digits.size()-1)>4)) || ((bigN.get(digits.size()-1)==0) || (digits.get(digits.size()-1)==0)))
+                if(((digits.get(digits.size()-1)>4) && (bigN.get(digits.size()-1)>4))
+                		|| bigN.sign() == 0)
                     result.add(9); //pad a 9 at the end so it stays negative
                 //if both digits are positive or if one is nine, the result should still be postive
-                else if(((digits.get(digits.size()-1)<5) && (bigN.get(digits.size()-1)<5)) || ((bigN.get(digits.size()-1)==9) || (digits.get(digits.size()-1)==9)))
+                else if(((digits.get(digits.size()-1)<5) && (bigN.get(digits.size()-1)<5))
+                		|| bigN.sign() == 1)
                     result.add(0); //pad a 0 at the end so it stays positive
         }
+        
+        // Normalize result to remove any unnecessary zeroes or nines
+//        result.normalize();
         //finally return the result of the addition of the two BigNumbers
         return result;
     }
@@ -194,9 +207,12 @@ public class BigNumber {
 			result = result.add(this);
 			// Subtract one if multiplier is positive, add if negative
 			mult = mult.subtract(bigInc);
+			System.out.println("Mult: " + mult);
+			System.out.println("Result: " + result);
+//			System.out.println("Multiply!");
 			result.normalize();
 		}
-//		result.normalize();
+		result.normalize();
 		return result;
 	}
 	

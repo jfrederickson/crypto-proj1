@@ -8,23 +8,25 @@ public class TestingDriver {
 	static BigNumber pos5_2 = new BigNumber();
 	static BigNumber neg6 = new BigNumber();
 	static BigNumber zero = new BigNumber();
-	static BigNumber add1 = new BigNumber("483");
-	static BigNumber add2 = new BigNumber("21");
+	static BigNumber add1 = new BigNumber("583");
+	static BigNumber add2 = new BigNumber("561");
 	static BigNumber pos1 = new BigNumber("25");
 	static BigNumber pos2 = new BigNumber("43");
 	static BigNumber neg1 = new BigNumber("6");
+	static BigNumber small1 = new BigNumber("2");
+	static BigNumber small2 = new BigNumber("2");
 	
 	public static void main(String[] args)
 	{
 		test1.digits.add(1);
 		test1.digits.add(2);
-//		test1.digits.add(3);
-//		test1.digits.add(4);
+		test1.digits.add(3);
+		test1.digits.add(4);
 		
 		test2.digits.add(5);
 		test2.digits.add(4);
-//		test2.digits.add(5);
-//		test2.digits.add(2);
+		test2.digits.add(5);
+		test2.digits.add(2);
 		
 		pos5.digits.add(3);
 		pos5.digits.add(4);
@@ -76,15 +78,20 @@ public class TestingDriver {
 //		System.out.println(pos5.equals(zero));
 //		
 		
-		System.out.println(add1);
-		System.out.println(add2);
+//		System.out.println(add1);
+//		System.out.println(add2);
 //		test1.negate();
 //		System.out.println(test1);
 //		System.out.println(test1.subtract(test2));
 		
 //		System.out.println(test1.multiply(test2));
 		
-		System.out.println(pos1.compareTo(neg1));
+//		System.out.println(add1.add(add2));
+		
+		System.out.println("Test1: " + test1);
+		System.out.println("Test2: " + test2);
+//		System.out.println(add1.add(add2));
+		System.out.println(add1.multiply(add2));
 	}
 	
 }
