@@ -252,6 +252,8 @@ public class BigNumber {
 		
 		if(div.sign() == 0) return null; // Divisor is 0, result is 0
 		
+		if(compareTo(div) < 0) return new BigNumber("0");
+		
 		// As long as this BigNum is greater than the divisor, subtract div from the result
 		while(compareTo(div) > 0) {
 			result = result.subtract(div);
