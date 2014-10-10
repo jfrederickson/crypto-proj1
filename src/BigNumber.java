@@ -77,13 +77,13 @@ public class BigNumber {
         //checking to make sure each BigNumber is of the same size
         //if they are not, the smaller of the two will be 'padded'
         //see the method pad(int n) for more details...
-        if(numbers.size() > bigN.size())
-            bigN.pad(numbers.size()); //bigN is smaller, so pad it til it equals numbers.size()
-        else if(numbers.size() < bigN.size())
+        if(digits.size() > bigN.size())
+            bigN.pad(digits.size()); //bigN is smaller, so pad it til it equals numbers.size()
+        else if(digits.size() < bigN.size())
             this.pad(bigN.size()); //numbers is smaller, so pad it til it equals bigN.size()
         
         //time to iterate through the ArrayList adding the two numbers found at i.
-        for(int i=0; i<numbers.size(); i++) {
+        for(int i=0; i<digits.size(); i++) {
             //add the numbers, storing them in temp.
             temp = this.get(i) + bigN.get(i) + carryOver;
             //change carryOver back to 0 to avoid any funny addition errors
@@ -101,13 +101,13 @@ public class BigNumber {
             //for some techinal reasons involving tens complement....
             //if the last number is greater than 5...make sure that it stays positive
             //or negative, depending on what the two original BigNumbers were
-            if(i==numbers.size()-1)
+            if(i==digits.size()-1)
                 //if both numbers are negative or if one is zero, the result should still be neagetive
-                if(((numbers.get(numbers.size()-1)>4) && (bigN.get(numbers.size()-1)>4)) 
+                if(((digits.get(digits.size()-1)>4) && (bigN.get(digits.size()-1)>4)) 
                         || (bigN.sign()==0))
                     result.add(9); //pad a 9 at the end so it stays negative
                 //if both numbers are postive or if one is nine, the result should still be postive
-                else if(((numbers.get(numbers.size()-1)<5) && (numbers.get(numbers.size()-1) != 0)) && (((bigN.get(numbers.size()-1)<5) && (bigN.get(numbers.size()-1) != 0))) || (bigN.sign()==1))
+                else if(((digits.get(digits.size()-1)<5) && (digits.get(digits.size()-1) != 0)) && (((bigN.get(digits.size()-1)<5) && (bigN.get(digits.size()-1) != 0))) || (bigN.sign()==1))
                     result.add(0); //pad a 0 at the end so it stays positive
         }
         //finally return the result of the addition of the two BigNumbers
@@ -365,21 +365,21 @@ public class BigNumber {
      */
     private void normalize() {
         //remove unnessacary 9s for any number starting with 5 or more
-        if((numbers.get(numbers.size()-1)) == 9) {
+        if((digits.get(digits.size()-1)) == 9) {
             //if the second to last number is still greater then 5, then the 9
             //can be removed
-            if((numbers.get(numbers.size()-2)) >= 5) {
-                numbers.remove(numbers.size()-1);
+            if((digits.get(digits.size()-2)) >= 5) {
+            	digits.remove(digits.size()-1);
                 //call this again to remove anymore 9s.
                 normalize();
             }
         }
         //remove unnessacary 0s for any number starting with 4 or less
-        else if((numbers.get(numbers.size()-1)) == 0) {
-            if((numbers.get(numbers.size()-2)) < 5) {
+        else if((digits.get(digits.size()-1)) == 0) {
+            if((digits.get(digits.size()-2)) < 5) {
                 //if the second to last number is still less than 4, then the 0
                 //can be removed
-                numbers.remove(numbers.size()-1);
+            	digits.remove(digits.size()-1);
                 //call this again to remove anymore 0s.
                 normalize();
             }
