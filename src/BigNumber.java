@@ -59,7 +59,7 @@ public class BigNumber {
 		
 	}
 	
-    /**
+	/**
      * Adds two BigNumbers together. Takes this BigNumber and a new BigNumber
      * bigN, adds the individual numbers in each slot of the ArrayList starting
      * with the least most significant digit, and puts the result into a new 
@@ -69,7 +69,7 @@ public class BigNumber {
      * @return result : The resulting BigNumber of the addition of this BigNumber
      *          and bigN.
      */
-    protected BigNumber add(BigNumber bigN) {
+    private BigNumber add(BigNumber bigN) {
         //create a new empty BigNumber object
         BigNumber result = new BigNumber();
         //used for when the result is over 9. carryover is the tens place holder.
@@ -77,21 +77,14 @@ public class BigNumber {
         //checking to make sure each BigNumber is of the same size
         //if they are not, the smaller of the two will be 'padded'
         //see the method pad(int n) for more details...
-        if(digits.size() > bigN.size()) {
-            bigN.pad(digits.size()); //bigN is smaller, so pad it til it equals digits.size()
-            //this.pad(this.size()+1);
-        }
-        else if(digits.size() < bigN.size()) {
-        	this.pad(bigN.size()); //digits is smaller, so pad it til it equals bigN.size()
-        	//bigN.pad(bigN.size()+1);
-        }
-         
-//        System.out.println(this);
-//        System.out.println(bigN);
+        if(digits.size() > bigN.size())
+            bigN.pad(digits.size()); //bigN is smaller, so pad it til it equals numbers.size()
+        else if(digits.size() < bigN.size())
+            this.pad(bigN.size()); //numbers is smaller, so pad it til it equals bigN.size()
         
-        //time to iterate through the ArrayList adding the two digits found at i.
+        //time to iterate through the ArrayList adding the two numbers found at i.
         for(int i=0; i<digits.size(); i++) {
-            //add the digits, storing them in temp.
+            //add the numbers, storing them in temp.
             temp = this.get(i) + bigN.get(i) + carryOver;
             //change carryOver back to 0 to avoid any funny addition errors
             carryOver = 0;
@@ -102,26 +95,23 @@ public class BigNumber {
                 //calculate temp.
                 temp = temp%10;
             }
-            //now that the digits have been added, add temp to the BigNumber result.
+            //now that the numbers have been added, add temp to the BigNumber result.
             result.add(temp);
             
-            //for some technical reasons involving tens complement....
+            //for some techinal reasons involving tens complement....
             //if the last number is greater than 5...make sure that it stays positive
             //or negative, depending on what the two original BigNumbers were
-            if((i==digits.size()-1))
-                //if both digits are negative or if one is zero, the result should still be neagetive
-                if(((digits.get(digits.size()-1)>4) && (bigN.get(digits.size()-1)>4))
-                		|| bigN.sign() == 0)
+            if(i==digits.size()-1)
+                //if both numbers are negative or if one is zero, the result should still be neagetive
+                if(((digits.get(digits.size()-1)>4) && (bigN.get(digits.size()-1)>4)) 
+                        || (bigN.sign()==0))
                     result.add(9); //pad a 9 at the end so it stays negative
-                //if both digits are positive or if one is nine, the result should still be postive
-                else if(((digits.get(digits.size()-1)<5) && (bigN.get(digits.size()-1)<5))
-                		|| bigN.sign() == 1)
+                //if both numbers are postive or if one is nine, the result should still be postive
+                else if(((digits.get(digits.size()-1)<5) && (digits.get(digits.size()-1) != 0)) && (((bigN.get(digits.size()-1)<5) && (bigN.get(digits.size()-1) != 0))) || (bigN.sign()==1))
                     result.add(0); //pad a 0 at the end so it stays positive
         }
-        
-        // Normalize result to remove any unnecessary zeroes or nines
-//        result.normalize();
         //finally return the result of the addition of the two BigNumbers
+        result.normalize();
         return result;
     }
     
@@ -326,6 +316,78 @@ public class BigNumber {
 		}
 	}
 	
+	/**
+     * This method will return the mod of this BigNumber and another in the 
+     * format this mod bigN. The result is a BigNumber. 
+     * 
+     * @param bigN : The BigNumber to be modded to this.
+     * @returns The mod of this.
+     */
+    private BigNumber mod(BigNumber bigN) {
+        BigNumber result = new BigNumber();
+        //if either BigNumber is negative, make it positive
+        if(this.sign() == -1)
+            negate();
+        if(bigN.sign() == -1)
+            bigN.negate();
+        //now that both are positve, if bigN is bigger than this, return this
+        if(this.compareTo(bigN) == 1) 
+            return this;
+        //otherwise subtract bigN from this and mod the result
+        result = this.subtract(bigN); 
+        return result.mod(bigN);
+    }
+    
+    /**
+     * This function will 'pad' the end of the ArrayList (or the beginning of the
+     * number) with either 0s or 9s depending on whether the number si positive
+     * or negative. Uses a comparison to another BigNumber array size to know
+     * how many digits to pad it with. Used on adding and subtracting two 
+     * BigNumbers.
+     * 
+     * @param n : the wanted size of the final array.
+     */
+    private void pad(int n) {
+        //if the last number is greater than 5...
+        if(digits.get(digits.size()-1) >= 5)
+            for(int i=digits.size(); i<n; i++)
+                //pad with 9s.
+                digits.add(9);
+        else
+            for(int i=digits.size(); i<n; i++)
+                //else pad with 0s.
+                digits.add(0);
+    }
+    
+    /**
+     * Normalize will take any leading 0s or 9s and effectively remove them if 
+     * they are unnecessary. It will not remove them in the case of say +527: 
+     * +527 will still be represented as 0527 so as to avoid it meaning 483 in
+     * tens complement.
+     */
+    private void normalize() {
+        //remove unnessacary 9s for any number starting with 5 or more
+        if((digits.get(digits.size()-1)) == 9) {
+            //if the second to last number is still greater then 5, then the 9
+            //can be removed
+            if((digits.get(digits.size()-2)) >= 5) {
+            	digits.remove(digits.size()-1);
+                //call this again to remove anymore 9s.
+                normalize();
+            }
+        }
+        //remove unnessacary 0s for any number starting with 4 or less
+        else if((digits.get(digits.size()-1)) == 0) {
+            if((digits.get(digits.size()-2)) < 5) {
+                //if the second to last number is still less than 4, then the 0
+                //can be removed
+            	digits.remove(digits.size()-1);
+                //call this again to remove anymore 0s.
+                normalize();
+            }
+        }
+    }
+	
     /**
      * Returns the length of the BigNumber. Not to be confused with size() from
      * ArrayList. As with the get(int n) and add(int n) methods, this method is
@@ -357,54 +419,6 @@ public class BigNumber {
      */
     private void add(int n) {
         digits.add(n);
-    }
-    
-    /**
-     * This function will 'pad' the end of the ArrayList (or the beginning of the
-     * number) with either 0s or 9s depending on whether the number si positive
-     * or negative. Uses a comparison to another BigNumber array size to know
-     * how many digits to pad it with. Used on adding and subtracting two 
-     * BigNumbers.
-     * 
-     * @param n : the wanted size of the final array.
-     */
-    private void pad(int n) {
-        //if the last number is greater than 5...
-        if(digits.get(digits.size()-1) >= 5)
-            for(int i=digits.size(); i<n; i++)
-                //pad with 9s.
-                digits.add(9);
-        else
-            for(int i=digits.size(); i<n; i++)
-                //else pad with 0s.
-                digits.add(0);
-    }
-    
-    /**
-     * Normalize will take any leading 0s or 9s and effectively remove them if 
-     * they are unnessecary. It will not remove them in the case of say +527: 
-     * +527 will still be represented as 0527 so as to avoid it meaning 483 in
-     * tens complement.
-     */
-    private void normalize() {
-        //remove unnessacary 9s for any number starting with 5 or more
-        if(digits.size()-1 == 9)
-            //if the second to last number is still greater then 5, then the 9
-            //can be removed
-            if(digits.size()-2 >= 5) {
-                digits.remove(digits.size()-1);
-                //call this again to remove anymore 9s.
-                normalize();
-            }
-        //remove unnessacary 0s for any number starting with 4 or less
-        else if(digits.size()-1 == 0)
-            if(digits.size()-2 <= 4) {
-                //if the second to last number is still less than 4, then the 0
-                //can be removed
-                digits.remove(digits.size()-1);
-                //call this again to remove anymore 0s.
-                normalize();
-            }
     }
 	
     /**
