@@ -193,26 +193,47 @@ public class BigNumber {
 		normalize();
 		mult.normalize();
 		
+		// We need to keep track of whether the number we're multiplying
+		// by is negative - this makes multiplication much easier.
+		boolean negative = false;
+		
 		BigNumber result = this; // Start with this BigNumber
+		// Create a BigNumber with an increment of 1 so we can add/subtract it
+		BigNumber bigInc = new BigNumber("1");
 		
-		int inc = mult.sign(); // 1 if multiplier is positive, -1 if negative
+		if(mult.sign() == 0) return mult; // Multiplier is 0, result is 0
 		
-		if(inc == 0) return mult; // Multiplier is 0, result is 0
+		else if(mult.sign() == -1) {
+			mult.negate();
+			negative = true;
+		}
 		
-		// Create a BigNumber out of the increment so we can subtract it
-		BigNumber bigInc = new BigNumber(Integer.toString(inc));
+		
+		System.out.println(mult.sign());
 		
 		// Add this BigNumber to itself "mult" times
 		while(mult.compareTo(bigInc) != 0) {
 			result = result.add(this);
 			// Subtract one if multiplier is positive, add if negative
-			mult = mult.subtract(bigInc);
+			if(mult.sign() == 1) {
+				mult = mult.subtract(bigInc);
+			}
+			
+			else if(mult.sign() == -1) {
+				mult = mult.add(bigInc);
+			}
+			
 			System.out.println("Mult: " + mult);
 			System.out.println("Result: " + result);
+			System.out.println("bigInc: " + bigInc);
 //			System.out.println("Multiply!");
 			result.normalize();
 		}
 		result.normalize();
+		if(negative) {
+			result.negate();
+			return result;
+		}
 		return result;
 	}
 	

@@ -13,8 +13,8 @@ public class TestingDriver {
 	static BigNumber pos1 = new BigNumber("25");
 	static BigNumber pos2 = new BigNumber("43");
 	static BigNumber neg1 = new BigNumber("6");
-	static BigNumber small1 = new BigNumber("2");
-	static BigNumber small2 = new BigNumber("2");
+	static BigNumber small1 = new BigNumber("6");
+	static BigNumber small2 = new BigNumber("7");
 	
 	public static void main(String[] args)
 	{
@@ -88,10 +88,12 @@ public class TestingDriver {
 		
 //		System.out.println(add1.add(add2));
 		
-		System.out.println("Test1: " + test1);
-		System.out.println("Test2: " + test2);
+		System.out.println("Add1: " + small1);
+		System.out.println("Add2: " + small2);
 //		System.out.println(add1.add(add2));
 		System.out.println(add1.multiply(add2));
+		System.out.println(small2.sign());
+		
 	}
 	
 }
