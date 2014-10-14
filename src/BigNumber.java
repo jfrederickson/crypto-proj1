@@ -463,7 +463,7 @@ public class BigNumber {
     }
     
     private void updateLastIndex() {
-        lastIndex = numbers.size()-1;
+        lastIndex = digits.size()-1;
     }
     
 }
