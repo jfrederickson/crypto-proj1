@@ -243,14 +243,35 @@ public class BigNumber {
 	public BigNumber divide(BigNumber div) {
 		normalize();
 		div.normalize();
+		int negcount = 0;
 		
-		BigNumber result = this; // Start with this BigNumber
+		BigNumber numerator = this;
 		
-		if(div.sign() == 0) return null; // Divisor is 0, result is 0
+		if(div.sign() == 0) return null;
+		
+		if(numerator.sign() == -1) {
+			numerator.negate();
+			negcount++;
+		}
+		if(div.sign() == -1) {
+			div.negate();
+			negcount++;
+		} 
+		
+		System.out.println("Numerator: " + this);
+		System.out.println("Denominator: " + div);
+		
+		//if(this.compareTo(div) < 0) return new BigNumber("0");
+		
+		BigNumber result = new BigNumber("0");
+		BigNumber one = new BigNumber("1");
 		
 		// As long as this BigNum is greater than the divisor, subtract div from the result
-		while(compareTo(div) > 0) {
-			result = result.subtract(div);
+		while(this.compareTo(div) < 0) {
+			result.add(one);
+			numerator = numerator.subtract(div);
+			System.out.println(numerator);
+			System.out.println(div);
 		}
 		
 		return result;
@@ -369,7 +390,7 @@ public class BigNumber {
      * +527 will still be represented as 0527 so as to avoid it meaning 483 in
      * tens complement.
      */
-    private void normalize() {
+    protected void normalize() {
         //remove unnessacary 9s for any number starting with 5 or more
         if((digits.get(digits.size()-1)) == 9) {
             //if the second to last number is still greater then 5, then the 9
