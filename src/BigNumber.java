@@ -69,7 +69,7 @@ public class BigNumber {
      * @return result : The resulting BigNumber of the addition of this BigNumber
      *          and bigN.
      */
-    private BigNumber add(BigNumber bigN) {
+    protected BigNumber add(BigNumber bigN) {
         //create a new empty BigNumber object
         BigNumber result = new BigNumber();
         //used for when the result is over 9. carryover is the tens place holder.
@@ -128,6 +128,8 @@ public class BigNumber {
         //subtracting is the same as adding a negative number, so negate the given
         //BigNumber and pass it through to add(bigN).
     	bigN.negate();
+    	System.out.println(this);
+    	System.out.println(bigN);
         BigNumber result =  add(bigN);
         bigN.negate(); // Negate bigN again to avoid ugly side effects
         return result;
@@ -261,8 +263,8 @@ public class BigNumber {
 		BigNumber one = new BigNumber("1");
 		
 		// As long as this BigNum is greater than the divisor, subtract div from the result
-		while(this.compareTo(div) < 0) {
-			result.add(one);
+		while(this.compareTo(div) > 0) {
+			result = result.add(one);
 			numerator = numerator.subtract(div);
 			System.out.println(numerator);
 			System.out.println(div);
