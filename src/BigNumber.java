@@ -76,10 +76,18 @@ public class BigNumber {
         //checking to make sure each BigNumber is of the same size
         //if they are not, the smaller of the two will be 'padded'
         //see the method pad(int n) for more details...
-        if(digits.size() > bigN.size())
-            bigN.pad(digits.size()); //bigN is smaller, so pad it til it equals numbers.size()
-        else if(digits.size() < bigN.size())
-            this.pad(bigN.size()); //numbers is smaller, so pad it til it equals bigN.size()
+        if(digits.size() > bigN.size()) { 
+            bigN.pad(digits.size() + 1); //bigN is smaller, so pad it til it equals numbers.size()
+            this.pad(bigN.size());
+        }
+        else if(digits.size() < bigN.size()) {
+            this.pad(bigN.size() + 1); //numbers is smaller, so pad it til it equals bigN.size()
+            bigN.pad(digits.size());
+        }
+        else {
+        	this.pad(digits.size() + 1);
+        	bigN.pad(digits.size() + 1);
+        }
         
         //time to iterate through the ArrayList adding the two numbers found at i.
         for(int i=0; i<digits.size(); i++) {
@@ -100,16 +108,16 @@ public class BigNumber {
             //for some techinal reasons involving tens complement....
             //if the last number is greater than 5...make sure that it stays positive
             //or negative, depending on what the two original BigNumbers were
-            if(i==digits.size()-1)
-                //if both numbers are negative or if one is zero, the result should still be neagetive
-                if(((digits.get(digits.size()-1)>4) && (bigN.get(digits.size()-1)>4)) 
-                        || (bigN.sign()==0)) {
-                    result.add(9); //pad a 9 at the end so it stays negative
-                }
-                //if both numbers are postive or if one is nine, the result should still be postive
-                else if(((digits.get(digits.size()-1)<5) && (digits.get(digits.size()-1) != 0)) && (((bigN.get(digits.size()-1)<5) && (bigN.get(digits.size()-1) != 0))) || (bigN.sign()==1)) {
-                    result.add(0); //pad a 0 at the end so it stays positive
-                }
+//            if(i==digits.size()-1)
+//                //if both numbers are negative or if one is zero, the result should still be neagetive
+//                if(((digits.get(digits.size()-1)>4) && (bigN.get(digits.size()-1)>4)) 
+//                        || (bigN.sign()==0)) {
+//                    result.add(9); //pad a 9 at the end so it stays negative
+//                }
+//                //if both numbers are postive or if one is nine, the result should still be postive
+//                else if(((digits.get(digits.size()-1)<5) && (digits.get(digits.size()-1) != 0)) && (((bigN.get(digits.size()-1)<5) && (bigN.get(digits.size()-1) != 0))) || (bigN.sign()==1)) {
+//                    result.add(0); //pad a 0 at the end so it stays positive
+//                }
         }
         //finally return the result of the addition of the two BigNumbers
         result.normalize();
