@@ -472,7 +472,6 @@ public class BigNumber {
         String s = "";
         for(int i=digits.size()-1; i>=0; i--)
             s += digits.get(i).toString();
-        s += "\n";
         return s;
     }
     
