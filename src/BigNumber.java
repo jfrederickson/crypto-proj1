@@ -172,6 +172,7 @@ public class BigNumber {
 	 * Negates this BigNumber using ten's complement notation
 	 */
 	public void negate() {
+		if(sign() == 0) return;
 		int len = digits.size();
 		int count = 0;
 		
