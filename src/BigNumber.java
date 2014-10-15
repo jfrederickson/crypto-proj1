@@ -201,15 +201,19 @@ public class BigNumber {
 	 * @param mult The number to multiply by
 	 * @return the result of this BigNumber * the parameter
 	 */
-	public BigNumber multiply(BigNumber mult) {
+	public BigNumber multiply(BigNumber multiplier) {
+		// Both BigNumbers need to be normalized
 		normalize();
-		mult.normalize();
+		multiplier.normalize();
 		
 		// We need to keep track of whether the number we're multiplying
 		// by is negative - this makes multiplication much easier.
 		boolean negative = false;
 		
+		// Make copies of BigNumbers so we don't accidentally do things to them
 		BigNumber result = new BigNumber(this.toString()); // Start with this BigNumber
+		BigNumber mult = new BigNumber(multiplier.toString());
+		
 		// Create a BigNumber with an increment of 1 so we can add/subtract it
 		BigNumber bigInc = new BigNumber("1");
 		
