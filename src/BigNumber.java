@@ -359,7 +359,8 @@ public class BigNumber {
 	
 	/**
      * This method will return the mod of this BigNumber and another in the 
-     * format this mod bigN. The result is a BigNumber. 
+     * format this mod bigN. The result is a BigNumber. In the case of two 
+     * negative BigNumbers, the result will be a negative BigNumber.
      * 
      * @param bigN : The BigNumber to be modded to this.
      * @returns The mod of this.
