@@ -125,7 +125,7 @@ public class BigNumber {
     }
     
     /**
-     * Subtracts two BigNumbers from each other. Uses the add(BigNumber bigN)
+     * Subtracts two BigNumbers from each other. Uses the add(BigNumber bigindexN)
      * function. Negates the parameter bigN before passing it through to add(bigN).
      * 
      * @param bigN : BigNumber to be subtracted from this BigNumber.
@@ -173,14 +173,24 @@ public class BigNumber {
 	 */
 	public void negate() {
 		int len = digits.size();
-		for(int i=0; i<len; i++) {
+		int count = 0;
+		
+		while(digits.get(count) == 0) {
+			count++;
+		}
+		
+		digits.set(count, 10 - digits.get(count));
+		count++;
+		
+		while(count < len) {
 			// Replace each digit in list with 9-itself
 			// (Nine's complement)
-			digits.set(i, 9 - digits.get(i));
+			digits.set(count, 9 - digits.get(count));
+			count++;
 		}
 		
 		// Add one (ten's complement)
-		digits.set(0, 1 + digits.get(0));
+//		digits.set(0, 1 + digits.get(0));
 	}
 	
 	/**
@@ -198,7 +208,7 @@ public class BigNumber {
 		// by is negative - this makes multiplication much easier.
 		boolean negative = false;
 		
-		BigNumber result = this; // Start with this BigNumber
+		BigNumber result = new BigNumber(this.toString()); // Start with this BigNumber
 		// Create a BigNumber with an increment of 1 so we can add/subtract it
 		BigNumber bigInc = new BigNumber("1");
 		
