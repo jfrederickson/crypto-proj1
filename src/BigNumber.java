@@ -224,9 +224,6 @@ public class BigNumber {
 			negative = true;
 		}
 		
-		
-		System.out.println(mult.sign());
-		
 		// Add this BigNumber to itself "mult" times
 		while(mult.compareTo(bigInc) != 0) {
 			result = result.add(this);
@@ -238,11 +235,6 @@ public class BigNumber {
 			else if(mult.sign() == -1) {
 				mult = mult.add(bigInc);
 			}
-			
-			System.out.println("Mult: " + mult);
-			System.out.println("Result: " + result);
-			System.out.println("bigInc: " + bigInc);
-//			System.out.println("Multiply!");
 			result.normalize();
 		}
 		result.normalize();
