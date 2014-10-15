@@ -285,10 +285,10 @@ public class BigNumber {
 	 * @return -1 if this BigNumber is negative, 1 if positive, 0 if zero
 	 */
 	public int sign() {
-		normalize();
+		BigNumber tmp = new BigNumber(this.toString());
 		
-		int len = digits.size();
-		int num = digits.get(len-1); // Most significant digit
+		int len = tmp.digits.size();
+		int num = tmp.digits.get(len-1); // Most significant digit
 		
 		if(num >= 5) return -1;
 		else if(num < 5 && num > 0) return 1;
@@ -296,7 +296,7 @@ public class BigNumber {
 		// Leading digit is zero, check if there are digits
 		// The BigNumber is positive if they are
 		else for(int i=len-1; i>=0; i--) {
-			if(digits.get(i) > 0) return 1;
+			if(tmp.digits.get(i) > 0) return 1;
 		}
 		// We've looped through the whole number, and all digits are 0
 		return 0;
