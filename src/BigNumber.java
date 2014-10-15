@@ -85,8 +85,8 @@ public class BigNumber {
             bigN.pad(digits.size());
         }
         else {
-        	this.pad(digits.size() + 1);
         	bigN.pad(digits.size() + 1);
+        	this.pad(digits.size() + 1);
         }
         
         //time to iterate through the ArrayList adding the two numbers found at i.
@@ -137,8 +137,8 @@ public class BigNumber {
         //subtracting is the same as adding a negative number, so negate the given
         //BigNumber and pass it through to add(bigN).
     	bigN.negate();
-    	System.out.println(this);
-    	System.out.println(bigN);
+    	//System.out.println(this);
+    	//System.out.println(bigN);
         BigNumber result =  add(bigN);
         bigN.negate(); // Negate bigN again to avoid ugly side effects
         return result;
@@ -354,14 +354,14 @@ public class BigNumber {
      * @param bigN : The BigNumber to be modded to this.
      * @returns The mod of this.
      */
-    private BigNumber mod(BigNumber bigN) {
+    protected BigNumber mod(BigNumber bigN) {
         BigNumber result = new BigNumber();
         //if either BigNumber is negative, make it positive
         if(this.sign() == -1)
             negate();
         if(bigN.sign() == -1)
             bigN.negate();
-        //now that both are positve, if bigN is bigger than this, return this
+        //now that both are positive, if bigN is bigger than this, return this
         if(this.compareTo(bigN) == 1) 
             return this;
         //otherwise subtract bigN from this and mod the result
@@ -397,26 +397,28 @@ public class BigNumber {
      * tens complement.
      */
     protected void normalize() {
-        //remove unnessacary 9s for any number starting with 5 or more
-        if((digits.get(digits.size()-1)) == 9) {
-            //if the second to last number is still greater then 5, then the 9
-            //can be removed
-            if((digits.get(digits.size()-2)) >= 5) {
-            	digits.remove(digits.size()-1);
-                //call this again to remove anymore 9s.
-                normalize();
-            }
-        }
-        //remove unnessacary 0s for any number starting with 4 or less
-        else if((digits.get(digits.size()-1)) == 0) {
-            if((digits.get(digits.size()-2)) < 5) {
-                //if the second to last number is still less than 4, then the 0
-                //can be removed
-            	digits.remove(digits.size()-1);
-                //call this again to remove anymore 0s.
-                normalize();
-            }
-        }
+    	if(digits.size() != 1) {
+	        //remove unnessacary 9s for any number starting with 5 or more
+	        if((digits.get(digits.size()-1)) == 9) {
+	            //if the second to last number is still greater then 5, then the 9
+	            //can be removed
+	            if((digits.get(digits.size()-2)) >= 5) {
+	            	digits.remove(digits.size()-1);
+	                //call this again to remove anymore 9s.
+	                normalize();
+	            }
+	        }
+	        //remove unnessacary 0s for any number starting with 4 or less
+	        else if((digits.get(digits.size()-1)) == 0) {
+	            if((digits.get(digits.size()-2)) < 5) {
+	                //if the second to last number is still less than 4, then the 0
+	                //can be removed
+	            	digits.remove(digits.size()-1);
+	                //call this again to remove anymore 0s.
+	                normalize();
+	            }
+	        }
+    	}
     }
 	
     /**
