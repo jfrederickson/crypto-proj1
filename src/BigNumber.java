@@ -22,6 +22,7 @@ public class BigNumber {
         digits = new ArrayList<Integer>();
         //fill the newly created ArrayList of Integers
         fillNumbers(s);
+
     
     }
 	
@@ -105,7 +106,7 @@ public class BigNumber {
                         || (bigN.sign()==0)) {
                     result.add(9); //pad a 9 at the end so it stays negative
                 }
-                //if both numbers are positive or if one is nine, the result should still be postive
+                //if both numbers are postive or if one is nine, the result should still be postive
                 else if(((digits.get(digits.size()-1)<5) && (digits.get(digits.size()-1) != 0)) && (((bigN.get(digits.size()-1)<5) && (bigN.get(digits.size()-1) != 0))) || (bigN.sign()==1)) {
                     result.add(0); //pad a 0 at the end so it stays positive
                 }
@@ -279,10 +280,10 @@ public class BigNumber {
 	 * @return -1 if this BigNumber is negative, 1 if positive, 0 if zero
 	 */
 	public int sign() {
-		normalize();
+		BigNumber tmp = new BigNumber(this.toString());
 		
-		int len = digits.size();
-		int num = digits.get(len-1); // Most significant digit
+		int len = tmp.digits.size();
+		int num = tmp.digits.get(len-1); // Most significant digit
 		
 		if(num >= 5) return -1;
 		else if(num < 5 && num > 0) return 1;
@@ -290,7 +291,7 @@ public class BigNumber {
 		// Leading digit is zero, check if there are digits
 		// The BigNumber is positive if they are
 		else for(int i=len-1; i>=0; i--) {
-			if(digits.get(i) > 0) return 1;
+			if(tmp.digits.get(i) > 0) return 1;
 		}
 		// We've looped through the whole number, and all digits are 0
 		return 0;
