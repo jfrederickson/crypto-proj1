@@ -281,6 +281,7 @@ public class BigNumber {
 	 */
 	public int sign() {
 		BigNumber tmp = new BigNumber(this.toString());
+		tmp.normalize();
 		
 		int len = tmp.digits.size();
 		int num = tmp.digits.get(len-1); // Most significant digit
