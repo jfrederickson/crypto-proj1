@@ -10,7 +10,6 @@ import java.util.ArrayList;
 public class BigNumber {
 	
 	protected ArrayList<Integer> digits;
-	int lastIndex = 0;
 	
     /**
      * Constructor for class BigNumber. Transforms a string argument into an
@@ -24,7 +23,6 @@ public class BigNumber {
         //fill the newly created ArrayList of Integers
         fillNumbers(s);
         //set the lastIndex of the ArrayList(currently broken)
-        lastIndex = digits.size()-1;
     
     }
 	
@@ -98,22 +96,19 @@ public class BigNumber {
             }
             //now that the numbers have been added, add temp to the BigNumber result.
             result.add(temp);
-            result.updateLastIndex();
             
             //for some techinal reasons involving tens complement....
             //if the last number is greater than 5...make sure that it stays positive
             //or negative, depending on what the two original BigNumbers were
-            if(i==lastIndex)
+            if(i==digits.size()-1)
                 //if both numbers are negative or if one is zero, the result should still be neagetive
-                if(((digits.get(digits.size()-1)>4) && (bigN.get(lastIndex-1)>4)) 
+                if(((digits.get(digits.size()-1)>4) && (bigN.get(digits.size()-1)>4)) 
                         || (bigN.sign()==0)) {
                     result.add(9); //pad a 9 at the end so it stays negative
-            		result.updateLastIndex();
                 }
                 //if both numbers are postive or if one is nine, the result should still be postive
-                else if(((digits.get(digits.size()-1)<5) && (digits.get(digits.size()-1) != 0)) && (((bigN.get(lastIndex-1)<5) && (bigN.get(lastIndex-1) != 0))) || (bigN.sign()==1)) {
+                else if(((digits.get(digits.size()-1)<5) && (digits.get(digits.size()-1) != 0)) && (((bigN.get(digits.size()-1)<5) && (bigN.get(digits.size()-1) != 0))) || (bigN.sign()==1)) {
                     result.add(0); //pad a 0 at the end so it stays positive
-                    result.updateLastIndex();
                 }
         }
         //finally return the result of the addition of the two BigNumbers
@@ -460,10 +455,6 @@ public class BigNumber {
             s += digits.get(i).toString();
         s += "\n";
         return s;
-    }
-    
-    private void updateLastIndex() {
-        lastIndex = digits.size()-1;
     }
     
 }
