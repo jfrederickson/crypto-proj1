@@ -358,23 +358,95 @@ public class BigNumber {
      * This method will return the mod of this BigNumber and another in the 
      * format this mod bigN. The result is a BigNumber. In the case of two 
      * negative BigNumbers, the result will be a negative BigNumber.
+     * the form is a mod m.
      * 
      * @param bigN : The BigNumber to be modded to this.
      * @returns The mod of this.
      */
     protected BigNumber mod(BigNumber bigN) {
+        BigNumber tempA = new BigNumber(this.toString());
+        BigNumber tempM = new BigNumber(bigN.toString());
         BigNumber result = new BigNumber();
-        //if either BigNumber is negative, make it positive
-        if(this.sign() == -1)
-            negate();
-        if(bigN.sign() == -1)
-            bigN.negate();
-        //now that both are positive, if bigN is bigger than this, return this
-        if(this.compareTo(bigN) == 1) 
-            return this;
-        //otherwise subtract bigN from this and mod the result
-        result = this.subtract(bigN); 
-        return result.mod(bigN);
+        // a mod m = r
+        
+        //some boolean variables...
+        boolean Aneg = false;
+        boolean Mneg = false;
+        
+        //negate if nesscary
+        if(tempA.sign() == -1) {
+        	Aneg = true;
+        	tempA.negate();
+        }
+        if(tempM.sign() == -1) {
+        	Mneg = true;
+        	tempM.negate();
+        }
+        
+        //now starts the actual mathing part...
+        //check if either are negative
+        if(Aneg || Mneg) {
+        	if(Mneg && !Aneg) {
+        		//only m is negative
+        		if(tempA.compareTo(tempM) == -1) {
+        			// a > m
+        			result = tempA.subtract(tempM).mod(tempM);
+        			result.negate();
+        			return result;
+        		}
+        		else {
+        			// a < m
+        			result = tempA.subtract(tempM);
+        			//result.negate();
+        			return result;
+        		}
+        	}
+        	
+        	else if(Mneg && Aneg) {
+        		//both a and m are negative
+        		if(tempA.compareTo(tempM) == 1) {
+        			// a < m
+        			result = tempA;
+        			result.negate();
+        			return result;
+        		}
+        		else { 
+        			//some duplicated code :(
+        			// a > m
+        			result = tempA.subtract(tempM).mod(tempM);
+        			//result.negate();
+        			return result;
+        		}
+        	}
+        	else if(!Mneg && Aneg) {
+        		//only a is negative
+        		if(tempA.compareTo(tempM) == 1) {
+        			//a < m
+        			return tempM.subtract(tempA);
+        		}
+        		else {
+        			// a > m
+        			result = tempM.subtract(tempA);
+        			//add until the number is positive
+        			while(result.sign() == -1) {
+        				result = result.add(tempM);
+        			}
+        			return result;
+        		}
+        	}
+        	//do some math involving negative numbers
+        }
+        else {
+        	//both numbers are positive
+        	//testing a < m
+        	if(tempA.compareTo(tempM) == 1)
+        		return tempA;
+        	else // (a-m) mod m
+        		return tempA.subtract(tempM).mod(tempM);
+        }
+        
+        System.out.println("It went somewhere where it should not have gone. :(");
+        return bigN;
     }
     
     /**
