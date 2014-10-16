@@ -197,7 +197,6 @@ public class BigNumber {
 	/**
 	 * Multiplies two BigNumbers together
 	 * TODO: Implement shift-and-add
-	 * TODO: Test this method - currently untested due to lack of add/ subtract methods
 	 * @param mult The number to multiply by
 	 * @return the result of this BigNumber * the parameter
 	 */
@@ -248,7 +247,6 @@ public class BigNumber {
 	/**
 	 * Divides one BigNumber by another
 	 * TODO: Implement shift-and-subtract
-	 * TODO: Test this method, currently untested due to lack of subtract method
 	 * @param div The number to divide by
 	 * @return the result of this BigNumber / the parameter
 	 */
