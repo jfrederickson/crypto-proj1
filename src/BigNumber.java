@@ -396,9 +396,12 @@ public class BigNumber {
 	
 	/**
      * This method will return the mod of this BigNumber and another in the 
-     * format this mod bigN. The result is a BigNumber. In the case of two 
-     * negative BigNumbers, the result will be a negative BigNumber.
-     * the form is a mod m.
+     * format this mod bigN. The result is a BigNumber. In the case of (any BigNumber)
+     * mod 0, it returns an empty BigNumber object that is not null. In the case of 0 mod
+     * (any BigNumber), it returns 0. This method mimics Python's and Google's 
+     * algorithm for mod, and thus will produce the same result as theirs.
+     * 
+     * More description in algorthim later....
      * 
      * @param bigN : The BigNumber to be modded to this.
      * @returns The mod of this.
@@ -409,11 +412,14 @@ public class BigNumber {
         BigNumber result = new BigNumber();
         // a mod m = r
         
-        //if we are modding by 0, return 0
-        //does not address teh issue of a mod 0. will just return 0 for now.
-        //going to add exceptions once done full testing of mod. stay tuned.
-        if(tempA.sign() == 0 || tempM.sign() == 0)
+        //if a = 0, then 0 mod m, then return 0
+        if(tempA.sign() == 0)
         	return new BigNumber("0");
+        //if m = 0, then a mod 0, then return exception
+        if(tempM.sign() == 0) {
+        	System.out.println("Error: Cannot mod by 0. Returning an empty BigNumber object.");
+        	return result;
+        }
         
         //some boolean variables...
         boolean Aneg = false;
@@ -433,7 +439,6 @@ public class BigNumber {
         //check if either are negative
         if(Aneg || Mneg) {
         	if(Mneg && !Aneg) {
-        		System.out.println("maybe here?");
         		//only m is negative
         		if(tempA.compareTo(tempM) == -1) {
         			// a > m
@@ -458,7 +463,6 @@ public class BigNumber {
         			return result;
         		}
         		else { 
-        			//some duplicated code :(
         			// a > m
         			result = tempA.subtract(tempM);
         			result = result.mod(tempM);

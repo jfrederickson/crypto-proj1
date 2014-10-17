@@ -121,6 +121,14 @@ public class TestDriver2 {
         System.out.println("Really big negative number mod 3 digit positive modding: result41: test12 % test1: " + result41.toString());
         BigNumber result42 = test1.mod(test12);
         System.out.println("3 digit positive and really big negative number modding: result42: test1 % test12: " + result42.toString());
+        BigNumber result43 = test3.mod(test11);
+        System.out.println("3 digit negative mod 0 modding: result43: test3 % test11: " + result43.toString());
+        BigNumber result44 = test1.mod(test11);
+        System.out.println("3 digit positive mod 0 modding: result44: test1 % test11: " + result44.toString());
+        BigNumber result45 = test6.mod(test11);
+        System.out.println("2 digit negative mod 0 modding: result45: test6 % test11: " + result45.toString());
+        BigNumber result46 = test5.mod(test11);
+        System.out.println("2 digit positive mod 0 modding: result46: test5 % test11: " + result46.toString());       
     }
 
 }
