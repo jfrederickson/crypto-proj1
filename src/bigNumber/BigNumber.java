@@ -12,6 +12,7 @@ import java.util.ArrayList;
 public class BigNumber {
 	
 	protected ArrayList<Integer> digits;
+	protected static ArrayList<BigNumber> factors = new ArrayList<BigNumber>();
 	
     /**
      * Constructor for class BigNumber. Transforms a string argument into an
@@ -24,8 +25,11 @@ public class BigNumber {
         digits = new ArrayList<Integer>();
         //fill the newly created ArrayList of Integers
         fillNumbers(s);
-
-    
+        
+        //to avoid recursively calling this constructor, call the other one and add 1 to the BigNumber
+        BigNumber one = new BigNumber();
+        one.digits.add(1);
+        factors.add(one); //to be used later in finding the factors of a BigNumber.
     }
 	
 	
@@ -64,6 +68,10 @@ public class BigNumber {
         }
     }
     
+    /**
+     * Do we need this?
+     * @param num
+     */
 	public BigNumber(int num) {
 		
 	}
@@ -94,6 +102,7 @@ public class BigNumber {
             this.pad(bigN.size() + 1); //numbers is smaller, so pad it til it equals bigN.size()
             bigN.pad(digits.size());
         }
+        //regardless of the sizes, pad an extra digit onto the end to catch overflow when adding
         else {
         	bigN.pad(digits.size() + 1);
         	this.pad(digits.size() + 1);
@@ -114,20 +123,6 @@ public class BigNumber {
             }
             //now that the numbers have been added, add temp to the BigNumber result.
             result.add(temp);
-            
-            //for some techinal reasons involving tens complement....
-            //if the last number is greater than 5...make sure that it stays positive
-            //or negative, depending on what the two original BigNumbers were
-//            if(i==digits.size()-1)
-//                //if both numbers are negative or if one is zero, the result should still be neagetive
-//                if(((digits.get(digits.size()-1)>4) && (bigN.get(digits.size()-1)>4)) 
-//                        || (bigN.sign()==0)) {
-//                    result.add(9); //pad a 9 at the end so it stays negative
-//                }
-//                //if both numbers are postive or if one is nine, the result should still be postive
-//                else if(((digits.get(digits.size()-1)<5) && (digits.get(digits.size()-1) != 0)) && (((bigN.get(digits.size()-1)<5) && (bigN.get(digits.size()-1) != 0))) || (bigN.sign()==1)) {
-//                    result.add(0); //pad a 0 at the end so it stays positive
-//                }
         }
         //finally return the result of the addition of the two BigNumbers
         result.normalize();
@@ -147,8 +142,6 @@ public class BigNumber {
         //subtracting is the same as adding a negative number, so negate the given
         //BigNumber and pass it through to add(bigN).
     	bigN.negate();
-    	//System.out.println(this);
-    	//System.out.println(bigN);
         BigNumber result =  add(bigN);
         bigN.negate(); // Negate bigN again to avoid ugly side effects
         return result;
@@ -556,6 +549,28 @@ public class BigNumber {
 	            }
 	        }
     	}
+    }
+    
+    /**
+     * This method will factor a BigNumber. It returns nothing. instead it modifies a field 
+     * factors in this class. factors lists all the factors in a BigNumber.
+     */
+    protected void factor() {
+    	BigNumber copyOfThis = new BigNumber(this.toString());
+    	BigNumber two = new BigNumber("2");
+    	BigNumber zero = new BigNumber("0");
+    	//BigNumber temp1 = copyOfThis.divide(two);
+        //temp1 = ;
+    	for(BigNumber i = new BigNumber("2"); i.compareTo(copyOfThis.divide(two)) == 1; i.add(i)) {
+    		System.out.println("It stays here.");
+    		if(copyOfThis.mod(i).compareTo(zero) == 0) {
+    			i.factor();
+    			System.out.println("It went here.");
+    			BigNumber temp2 = copyOfThis.divide(i);
+    			temp2.factor();
+    		}
+    	}
+    	factors.add(copyOfThis);
     }
 	
     /**
