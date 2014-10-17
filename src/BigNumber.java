@@ -35,6 +35,14 @@ public class BigNumber {
     protected BigNumber() {
         digits = new ArrayList<Integer>();
     }
+    
+    /**
+     * Private class to create a new BigNumber when you already have
+     * the digits ArrayList.
+     */
+    protected BigNumber(ArrayList<Integer> digits) {
+    	this.digits = digits;
+    }
 	
     /**
      * Fills an ArrayList with Integers, given the String, starting with the least 
@@ -251,9 +259,20 @@ public class BigNumber {
 	 * @return the result of this BigNumber / the parameter
 	 */
 	public BigNumber divide(BigNumber div) {
+		DivResult result = divShared(div);
+		return result.quotient;
+	}
+	
+	public BigNumber divMod(BigNumber div) {
+		DivResult result = divShared(div);
+		return result.remainder;
+	}
+	
+	private DivResult divShared(BigNumber div) {
 		normalize();
 		div.normalize();
 		int negcount = 0;
+		boolean negdenom = false;
 		
 		BigNumber numerator = this;
 		
@@ -265,29 +284,27 @@ public class BigNumber {
 		}
 		if(div.sign() == -1) {
 			div.negate();
+			negdenom = true;
 			negcount++;
 		} 
-		
-		System.out.println("Numerator: " + this);
-		System.out.println("Denominator: " + div);
-		
-		//if(this.compareTo(div) < 0) return new BigNumber("0");
 		
 		BigNumber result = new BigNumber("0");
 		BigNumber one = new BigNumber("1");
 		
 		// As long as this BigNum is greater than the divisor, subtract div from the result
-		while(this.compareTo(div) > 0) {
+		while(numerator.greaterThan(div) || numerator.equals(div)) {
 			result = result.add(one);
 			numerator = numerator.subtract(div);
-			System.out.println(numerator);
-			System.out.println(div);
 		}
-		
-		return result;
+		if(negcount == 1) {
+			result.negate();
+		}
+		if(negdenom) {
+			numerator = numerator.subtract(div);
+		}
+		return new DivResult(result, numerator);
 	}
-	
-	
+
 	/**
 	 * Checks the sign of this BigNumber
 	 * @return -1 if this BigNumber is negative, 1 if positive, 0 if zero
@@ -351,6 +368,31 @@ public class BigNumber {
 			return 0;
 		}
 	}
+	
+	/**
+	 * 
+	 * @param cmp
+	 * @return true if this BigNumber is greater than cmp
+	 */
+	public boolean greaterThan(BigNumber cmp) {
+		if(compareTo(cmp) == -1) {
+			return true;
+		}
+		return false;
+	}
+	
+	/**
+	 * 
+	 * @param cmp
+	 * @return true if this BigNumber is less than cmp
+	 */
+	public boolean lessThan(BigNumber cmp) {
+		if(compareTo(cmp) == 1) {
+			return true;
+		}
+		return false;
+	}
+	
 	
 	/**
      * This method will return the mod of this BigNumber and another in the 
@@ -553,6 +595,16 @@ public class BigNumber {
         for(int i=digits.size()-1; i>=0; i--)
             s += digits.get(i).toString();
         return s;
+    }
+    
+    class DivResult {
+    	public BigNumber quotient;
+    	public BigNumber remainder;
+    	
+    	public DivResult(BigNumber quotient, BigNumber remainder) {
+    		this.quotient = quotient;
+    		this.remainder = remainder;
+    	}
     }
     
 }
