@@ -261,24 +261,25 @@ public class BigNumber {
 	 * @return the result of this BigNumber / the parameter
 	 */
 	public BigNumber divide(BigNumber div) {
-		DivResult result = divShared(div);
-		return result.quotient;
+		BigNumber[] result = divShared(div);
+		return result[0];
 	}
 	
 	public BigNumber divMod(BigNumber div) {
-		DivResult result = divShared(div);
-		return result.remainder;
+		BigNumber[] result = divShared(div);
+		return result[1];
 	}
 	
-	private DivResult divShared(BigNumber div) {
+	private BigNumber[] divShared(BigNumber divisor) {
 		normalize();
-		div.normalize();
+		divisor.normalize();
 		int negcount = 0;
 		boolean negdenom = false;
 		
-		BigNumber numerator = this;
+		BigNumber numerator = new BigNumber(this.toString());
+		BigNumber div = new BigNumber(divisor.toString());
 		
-		if(div.sign() == 0) return null;
+		if(div.sign() == 0) return new BigNumber[2];
 		
 		if(numerator.sign() == -1) {
 			numerator.negate();
@@ -302,9 +303,9 @@ public class BigNumber {
 			result.negate();
 		}
 		if(negdenom) {
-			numerator = numerator.subtract(div);
+			numerator.negate();
 		}
-		return new DivResult(result, numerator);
+		return new BigNumber[]{result, numerator};
 	}
 
 	/**
