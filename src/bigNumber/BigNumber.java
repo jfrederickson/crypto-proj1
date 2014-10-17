@@ -264,16 +264,22 @@ public class BigNumber {
 	}
 	
 	private BigNumber[] divShared(BigNumber divisor) {
+		// Normalize both BigNumbers
 		normalize();
 		divisor.normalize();
+		// Counter to determine if the end result is negative
 		int negcount = 0;
+		// This may be necessary to fix mod, not sure yet
 		boolean negdenom = false;
 		
+		// Copy them so we don't accidentally do things to the originals
 		BigNumber numerator = new BigNumber(this.toString());
 		BigNumber div = new BigNumber(divisor.toString());
 		
+		// Dividing by zero here, return empty stuff
 		if(div.sign() == 0) return new BigNumber[2];
 		
+		// Check for negative numerator and denominator
 		if(numerator.sign() == -1) {
 			numerator.negate();
 			negcount++;
@@ -284,7 +290,9 @@ public class BigNumber {
 			negcount++;
 		} 
 		
+		// Result counter
 		BigNumber result = new BigNumber("0");
+		// Just for convenience
 		BigNumber one = new BigNumber("1");
 		
 		// As long as this BigNum is greater than the divisor, subtract div from the result
@@ -292,9 +300,13 @@ public class BigNumber {
 			result = result.add(one);
 			numerator = numerator.subtract(div);
 		}
+		
+		// The end result is negative because one of the two
+		// (numerator and denominator) is negative
 		if(negcount == 1) {
 			result.negate();
 		}
+		// FIXME: Mod currently has issues with negative numbers. This is probably wrong.
 		if(negdenom) {
 			numerator.negate();
 		}
