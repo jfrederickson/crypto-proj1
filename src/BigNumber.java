@@ -5,9 +5,7 @@
  * @author Tara Crittenden
  */
 
-import java.util.List;
 import java.util.ArrayList;
-import java.util.Collections;
 
 public class BigNumber {
 	
@@ -274,6 +272,7 @@ public class BigNumber {
 		normalize();
 		div.normalize();
 		int negcount = 0;
+		boolean negdenom = false;
 		
 		BigNumber numerator = this;
 		
@@ -285,6 +284,7 @@ public class BigNumber {
 		}
 		if(div.sign() == -1) {
 			div.negate();
+			negdenom = true;
 			negcount++;
 		} 
 		
@@ -298,6 +298,9 @@ public class BigNumber {
 		}
 		if(negcount == 1) {
 			result.negate();
+		}
+		if(negdenom) {
+			numerator = numerator.subtract(div);
 		}
 		return new DivResult(result, numerator);
 	}
@@ -582,13 +585,6 @@ public class BigNumber {
         for(int i=digits.size()-1; i>=0; i--)
             s += digits.get(i).toString();
         return s;
-    }
-    
-    /**
-     * Reverses the order of the elements in this BigNumber
-     */
-    protected void reverse() {
-    	Collections.reverse(digits);
     }
     
     class DivResult {
