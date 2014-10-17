@@ -367,6 +367,12 @@ public class BigNumber {
         BigNumber result = new BigNumber();
         // a mod m = r
         
+        //if we are modding by 0, return 0
+        //does not address teh issue of a mod 0. will just return 0 for now.
+        //going to add exceptions once done full testing of mod. stay tuned.
+        if(tempA.sign() == 0 || tempM.sign() == 0)
+        	return new BigNumber("0");
+        
         //some boolean variables...
         boolean Aneg = false;
         boolean Mneg = false;
@@ -385,17 +391,18 @@ public class BigNumber {
         //check if either are negative
         if(Aneg || Mneg) {
         	if(Mneg && !Aneg) {
+        		System.out.println("maybe here?");
         		//only m is negative
         		if(tempA.compareTo(tempM) == -1) {
         			// a > m
-        			result = tempA.subtract(tempM).mod(tempM);
-        			result.negate();
+        			result = tempA.subtract(tempM);
+        			tempM.negate();
+        			result = result.mod(tempM);
         			return result;
         		}
         		else {
         			// a < m
         			result = tempA.subtract(tempM);
-        			//result.negate();
         			return result;
         		}
         	}
@@ -411,8 +418,9 @@ public class BigNumber {
         		else { 
         			//some duplicated code :(
         			// a > m
-        			result = tempA.subtract(tempM).mod(tempM);
-        			//result.negate();
+        			result = tempA.subtract(tempM);
+        			result = result.mod(tempM);
+        			result.negate();
         			return result;
         		}
         	}
@@ -439,8 +447,10 @@ public class BigNumber {
         	//testing a < m
         	if(tempA.compareTo(tempM) == 1)
         		return tempA;
-        	else // (a-m) mod m
-        		return tempA.subtract(tempM).mod(tempM);
+        	else { // (a-m) mod m 
+        		result = tempA.subtract(tempM);
+        		return result.mod(tempM);
+        	}
         }
         
         System.out.println("It went somewhere where it should not have gone. :(");
