@@ -12,7 +12,7 @@ import java.util.ArrayList;
 public class BigNumber {
 	
 	protected ArrayList<Integer> digits;
-	protected static ArrayList<BigNumber> factors = new ArrayList<BigNumber>();
+	protected ArrayList<BigNumber> factors = new ArrayList<BigNumber>();
 	
     /**
      * Constructor for class BigNumber. Transforms a string argument into an
@@ -567,22 +567,37 @@ public class BigNumber {
      * This method will factor a BigNumber. It returns nothing. instead it modifies a field 
      * factors in this class. factors lists all the factors in a BigNumber.
      */
-    protected void factor() {
+    protected ArrayList<BigNumber> factor() {
     	BigNumber copyOfThis = new BigNumber(this.toString());
-    	BigNumber two = new BigNumber("2");
-    	BigNumber zero = new BigNumber("0");
-    	//BigNumber temp1 = copyOfThis.divide(two);
-        //temp1 = ;
-    	for(BigNumber i = new BigNumber("2"); i.compareTo(copyOfThis.divide(two)) == 1; i.add(i)) {
-    		System.out.println("It stays here.");
-    		if(copyOfThis.mod(i).compareTo(zero) == 0) {
-    			i.factor();
-    			System.out.println("It went here.");
-    			BigNumber temp2 = copyOfThis.divide(i);
-    			temp2.factor();
-    		}
+    	BigNumber one = new BigNumber("1"); //used to increment i
+    	BigNumber two = new BigNumber("2"); //used to divide this in half
+    	BigNumber zero = new BigNumber("0"); //used for comparisions
+    	//ArrayList<BigNumber> rightfactors = new ArrayList<BigNumber>();
+    	//ArrayList<BigNumber> leftfactors = new ArrayList<BigNumber>();
+    	
+    	BigNumber temp1 = copyOfThis.divide(two);
+        System.out.println("temp1: " + temp1.toString());
+        
+    	for(BigNumber i = new BigNumber("2"); i.compareTo(temp1) == 1; i = i.add(one)) {  		
+    		BigNumber temp2 = copyOfThis.mod(i);
+    		System.out.println("temp1a: " + temp1);
+    		
+    		if(temp2.compareTo(zero) == 0) {
+    			BigNumber temp3 = copyOfThis.divide(i);
+    			System.out.println("temp2: " + temp2);
+    			System.out.println("temp3: " + temp3);
+    			System.out.println("i: " + i.toString());
+    			//add the factors of i to the arraylist  			
+        		factors.addAll(i.factor());
+    			
+    			//add the factors of copyOfThis / i to the arraylist
+    			factors.addAll(temp3.factor());
+    			
+    		}   		
     	}
+    	//add this, as this is a factor of this
     	factors.add(copyOfThis);
+    	return factors;
     }
 	
     /**
