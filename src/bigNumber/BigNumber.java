@@ -582,6 +582,7 @@ public class BigNumber {
     		if(copyOfThis.mod(i).compareTo(zero) == 0) {
     			//add the factor i to the arraylist  
     			factors.add(i);
+    			factors.get(factors.size()-1).normalize();
     		}   		
     	}
     	//this is a factor of itself
