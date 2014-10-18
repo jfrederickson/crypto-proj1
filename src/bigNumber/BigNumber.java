@@ -298,6 +298,7 @@ public class BigNumber {
 		// As long as this BigNum is greater than the divisor, subtract div from the result
 		while(numerator.greaterThan(div) || numerator.equals(div)) {
 			result = result.add(one);
+			one.normalize();
 			numerator = numerator.subtract(div);
 		}
 		
@@ -573,16 +574,16 @@ public class BigNumber {
     	BigNumber two = new BigNumber("2"); //used to divide this in half
     	BigNumber zero = new BigNumber("0"); //used for comparisions
         
+    	BigNumber temp1 = copyOfThis.divide(two);
     	//divide the bignumber in half....
-    	for(BigNumber i = new BigNumber("2"); (i.compareTo(copyOfThis.divide(two)) == 1 || i.compareTo(copyOfThis.divide(two)) == 0); i = i.add(one)) {  
+    	for(BigNumber i = new BigNumber("2"); (i.compareTo(temp1) == 1 || i.compareTo(temp1) == 0); i = i.add(one)) {  
     		//and check whether any number goes evenly into it
-    		one.normalize(); //one keeps getting many zeros in front of it whenever it goes back up to the for loop. 
+    		//one.normalize(); //one keeps getting many zeros in front of it whenever it goes back up to the for loop. 
     		//need to find a way to normalize it IN the for loop (as it grows EVERYTIME THE FOR LOOP IS CALLED) or fiz the 
     		//growing zeros. 
     		if(copyOfThis.mod(i).compareTo(zero) == 0) {
     			//add the factor i to the arraylist  
     			factors.add(i);
-    			factors.get(factors.size()-1).normalize();
     		}   		
     	}
     	//this is a factor of itself
