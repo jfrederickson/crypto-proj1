@@ -27,11 +27,12 @@ public class TestingDriver {
 	static BigNumber neg10 = new BigNumber("90");
 	static BigNumber num31 = new BigNumber("31");
 	static BigNumber neg26 = new BigNumber("74");
+	static BigNumber divtest1 = new BigNumber("117852727");
 	
 	public static void main(String[] args)
 	{
 //		System.out.println("Answer: " + num31.divMod(neg26));
-		System.out.println(-(5107/186));
+		System.out.println(divtest1.divide(num2));
 	}
 	
 }
