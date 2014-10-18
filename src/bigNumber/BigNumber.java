@@ -572,33 +572,27 @@ public class BigNumber {
     	BigNumber one = new BigNumber("1"); //used to increment i
     	BigNumber two = new BigNumber("2"); //used to divide this in half
     	BigNumber zero = new BigNumber("0"); //used for comparisions
-    	//ArrayList<BigNumber> rightfactors = new ArrayList<BigNumber>();
-    	//ArrayList<BigNumber> leftfactors = new ArrayList<BigNumber>();
+    	ArrayList<BigNumber> rightfactors = new ArrayList<BigNumber>();
+    	ArrayList<BigNumber> leftfactors = new ArrayList<BigNumber>();
     	
     	BigNumber temp1 = copyOfThis.divide(two);
-        System.out.println("temp1: " + temp1.toString());
         
-    	for(BigNumber i = new BigNumber("2"); i.compareTo(temp1) == 1; i = i.add(one)) {  		
+    	for(BigNumber i = new BigNumber("2"); (i.compareTo(temp1) == 1 || i.compareTo(temp1) == 0); i = i.add(one)) {  
     		BigNumber temp2 = copyOfThis.mod(i);
-    		System.out.println("temp1a: " + temp1);
     		
     		if(temp2.compareTo(zero) == 0) {
-    			BigNumber temp3 = copyOfThis.divide(i);
-    			System.out.println("temp2: " + temp2);
-    			System.out.println("temp3: " + temp3);
-    			System.out.println("i: " + i.toString());
-    			//add the factors of i to the arraylist  			
-        		factors.addAll(i.factor());
-    			
-    			//add the factors of copyOfThis / i to the arraylist
-    			factors.addAll(temp3.factor());
-    			
+    			//add the factors of i to the arraylist  
+    			//iterate through the factors to see if the arraylist factors already contains the found factor
+    			i.normalize();
+    			System.out.println(i);
+    			factors.add(i);
     		}   		
     	}
-    	//add this, as this is a factor of this
     	factors.add(copyOfThis);
+    	System.out.println(factors);
     	return factors;
     }
+    
 	
     /**
      * Returns the length of the BigNumber. Not to be confused with size() from
