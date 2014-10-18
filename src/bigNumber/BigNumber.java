@@ -572,24 +572,20 @@ public class BigNumber {
     	BigNumber one = new BigNumber("1"); //used to increment i
     	BigNumber two = new BigNumber("2"); //used to divide this in half
     	BigNumber zero = new BigNumber("0"); //used for comparisions
-    	ArrayList<BigNumber> rightfactors = new ArrayList<BigNumber>();
-    	ArrayList<BigNumber> leftfactors = new ArrayList<BigNumber>();
-    	
-    	BigNumber temp1 = copyOfThis.divide(two);
         
-    	for(BigNumber i = new BigNumber("2"); (i.compareTo(temp1) == 1 || i.compareTo(temp1) == 0); i = i.add(one)) {  
-    		BigNumber temp2 = copyOfThis.mod(i);
-    		
-    		if(temp2.compareTo(zero) == 0) {
-    			//add the factors of i to the arraylist  
-    			//iterate through the factors to see if the arraylist factors already contains the found factor
-    			i.normalize();
-    			System.out.println(i);
+    	//divide the bignumber in half....
+    	for(BigNumber i = new BigNumber("2"); (i.compareTo(copyOfThis.divide(two)) == 1 || i.compareTo(copyOfThis.divide(two)) == 0); i = i.add(one)) {  
+    		//and check whether any number goes evenly into it
+    		if(copyOfThis.mod(i).compareTo(zero) == 0) {
+    			//add the factor i to the arraylist  
     			factors.add(i);
     		}   		
     	}
+    	//this is a factor of itself
     	factors.add(copyOfThis);
-    	System.out.println(factors);
+    	//normalize the bignumbers as that get many 0s appended in front whilst adding to the arraylist
+    	for(BigNumber bn : factors)
+    		bn.normalize();
     	return factors;
     }
     

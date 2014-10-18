@@ -167,6 +167,16 @@ public class TestDriver2 {
         System.out.println("Testing the factor(BigNumber bigN) method.....");
         test1.factor();
         System.out.println("The factors of test1 are: " + test1.factors);
+        test2.factor();
+        System.out.println("The factors of test2 are: " + test2.factors);
+        test3.factor();
+        System.out.println("The factors of test3 are: " + test3.factors);
+        test5.factor();
+        System.out.println("The factors of test5 are: " + test5.factors);
+        test7.factor();
+        System.out.println("The factors of test7 are: " + test7.factors);
+        test8.factor();
+        System.out.println("The factors of test8 are: " + test8.factors);
         }
 
 }
