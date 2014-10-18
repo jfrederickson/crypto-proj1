@@ -576,6 +576,9 @@ public class BigNumber {
     	//divide the bignumber in half....
     	for(BigNumber i = new BigNumber("2"); (i.compareTo(copyOfThis.divide(two)) == 1 || i.compareTo(copyOfThis.divide(two)) == 0); i = i.add(one)) {  
     		//and check whether any number goes evenly into it
+    		one.normalize(); //one keeps getting many zeros in front of it whenever it goes back up to the for loop. 
+    		//need to find a way to normalize it IN the for loop (as it grows EVERYTIME THE FOR LOOP IS CALLED) or fiz the 
+    		//growing zeros. 
     		if(copyOfThis.mod(i).compareTo(zero) == 0) {
     			//add the factor i to the arraylist  
     			factors.add(i);

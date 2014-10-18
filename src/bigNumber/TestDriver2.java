@@ -32,6 +32,10 @@ public class TestDriver2 {
         System.out.print(" test11: " + test11.toString());
         BigNumber test12 = new BigNumber("94893"); //really big negative number
         System.out.print(" test12: " + test12.toString());
+        BigNumber berTest1 = new BigNumber("2168211218041261");
+        System.out.print(" test1: " + berTest1.toString());
+        BigNumber berTest2 = new BigNumber("117852727");
+        System.out.print(" test2: " + berTest2.toString());
         
         System.out.println();
         System.out.println();
@@ -177,6 +181,10 @@ public class TestDriver2 {
         System.out.println("The factors of test7 are: " + test7.factors);
         test8.factor();
         System.out.println("The factors of test8 are: " + test8.factors);
+        //berTest1.factor();
+        //System.out.println("The factors of berTest1 are: " + berTest1.factors);
+        berTest2.factor();
+        System.out.println("The factors of berTest2 are: " + berTest2.factors);
         }
 
 }
