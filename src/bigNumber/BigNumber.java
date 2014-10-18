@@ -452,6 +452,7 @@ public class BigNumber {
         		if(tempA.compareTo(tempM) == -1) {
         			// a > m
         			result = tempA.subtract(tempM);
+        			tempM.normalize();
         			tempM.negate();
         			result = result.mod(tempM);
         			return result;
@@ -459,6 +460,7 @@ public class BigNumber {
         		else {
         			// a < m
         			result = tempA.subtract(tempM);
+        			tempM.normalize();
         			return result;
         		}
         	}
@@ -474,6 +476,7 @@ public class BigNumber {
         		else { 
         			// a > m
         			result = tempA.subtract(tempM);
+        			tempM.normalize();
         			result = result.mod(tempM);
         			result.negate();
         			return result;
@@ -491,6 +494,7 @@ public class BigNumber {
         			//add until the number is positive
         			while(result.sign() == -1) {
         				result = result.add(tempM);
+        				tempM.normalize();
         			}
         			return result;
         		}
@@ -504,6 +508,7 @@ public class BigNumber {
         		return tempA;
         	else { // (a-m) mod m 
         		result = tempA.subtract(tempM);
+        		tempM.normalize();
         		return result.mod(tempM);
         	}
         }
