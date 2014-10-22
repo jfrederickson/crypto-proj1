@@ -530,23 +530,23 @@ public class BigNumber {
     	BigNumber dividend = new BigNumber(this.toString());
     	int test = 1;
     	
-    	while(test < dividend.digits.size()) {
+    	while(test <= dividend.digits.size()) {
     		List<Integer> sub = dividend.digits.subList(0, test);
     		BigNumber dividendPart = new BigNumber(sub);
-    		if(bigN.lessThan(dividendPart)) {
+    		if(dividendPart.lessThan(bigN)) {
     			test++;
     			quotient.add(0);
     		}
     		else {
     			int count = 0;
     			BigNumber tmp = dividendPart;
-    			while(dividendPart.sign() > 0) {
+    			while(tmp.sign() > 0) {
     				tmp = tmp.subtract(bigN);
     				count++;
     			}
     			
     			remainder = tmp.add(bigN);
-    			
+    			tmp.normalize();
     			tmp.pad(dividendPart.size());
     			for(int i = 0; i < tmp.size(); i++) {
     				dividendPart.digits.set(i, tmp.digits.get(i));
@@ -556,7 +556,7 @@ public class BigNumber {
     		}
     	}
     	
-    	return null;
+    	return quotient;
     }
     
     /**
@@ -615,7 +615,7 @@ public class BigNumber {
      * This method will factor a BigNumber. It returns nothing. instead it modifies a field 
      * factors in this class. factors lists all the factors in a BigNumber.
      */
-    protected ArrayList<BigNumber> factor() {
+    protected List<BigNumber> factor() {
     	BigNumber copyOfThis = new BigNumber(this.toString());
     	BigNumber one = new BigNumber("1"); //used to increment i
     	BigNumber two = new BigNumber("2"); //used to divide this in half
