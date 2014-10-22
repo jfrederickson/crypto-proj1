@@ -33,9 +33,9 @@ public class TestDriver2 {
         BigNumber test12 = new BigNumber("94893"); //really big negative number
         System.out.print(" test12: " + test12.toString());
         BigNumber berTest1 = new BigNumber("2168211218041261");
-        System.out.print(" test1: " + berTest1.toString());
+        System.out.print(" berTest1: " + berTest1.toString());
         BigNumber berTest2 = new BigNumber("117852727");
-        System.out.print(" test2: " + berTest2.toString());
+        System.out.print(" berTest2: " + berTest2.toString());
         
         System.out.println();
         System.out.println();
@@ -88,43 +88,43 @@ public class TestDriver2 {
 //        System.out.print("3 digit positive ending in 9 and 3 digit negative addition: result23 = test10 + test4: " + result23.toString());
 
 //        System.out.println("Testing the mod(BigNumber bigN) fucntion in general.....");
-//        BigNumber result24 = test1.divMod(test2);
+//        BigNumber result24 = test1.tMod(test2);
 //        System.out.println("3 digit postive modding: result24: test1 % test2: " + result24.toString());
-//        BigNumber result25 = test2.divMod(test1);
+//        BigNumber result25 = test2.tMod(test1);
 //        System.out.println("3 digit postive modding: result25: test2 % test1: " + result25.toString());
-//        BigNumber result26 = test5.divMod(test7);
+//        BigNumber result26 = test5.tMod(test7);
 //        System.out.println("2 digit positive modding: result26: test5 % test7: " + result26.toString());
-//        BigNumber result27 = test7.divMod(test5);
+//        BigNumber result27 = test7.tMod(test5);
 //        System.out.println("2 digit positive modding: result27: test7 % test5: " + result27.toString());
-//        BigNumber result28 = test3.divMod(test4);
+//        BigNumber result28 = test3.tMod(test4);
 //        System.out.println("3 digit negative modding: result28: test3 % test4: " + result28.toString());
-//        BigNumber result29 = test4.divMod(test3);
+//        BigNumber result29 = test4.tMod(test3);
 //        System.out.println("3 digit negative modding: result29: test4 % test3: " + result29.toString());
-//        BigNumber result30 = test6.divMod(test9);
+//        BigNumber result30 = test6.tMod(test9);
 //        System.out.println("2 digit negative modding: result30: test6 % test9: " + result30.toString());
-//        BigNumber result31 = test9.divMod(test6);
+//        BigNumber result31 = test9.tMod(test6);
 //        System.out.println("2 digit negative modding: result31: test9 % test6: " + result31.toString());
-//        BigNumber result32 = test1.divMod(test3);
-//        System.out.println("3 digit postive anumerator.negate();nd negative modding: result32: test1 % test3: " + result32.toString());
-//        BigNumber result33 = test3.divMod(test1);
+//        BigNumber result32 = test1.tMod(test3);
+//        System.out.println("3 digit postive and negative modding: result32: test1 % test3: " + result32.toString());
+//        BigNumber result33 = test3.tMod(test1);
 //        System.out.println("3 digit negative and positive modding: result33: test3 % test1: " + result33.toString());
-//        BigNumber result34 = test5.divMod(test6);
+//        BigNumber result34 = test5.tMod(test6);
 //        System.out.println("2 digit postive and negative modding: result34: test5 % test6: " + result34.toString());
-//        BigNumber result35 = test6.divMod(test5);
+//        BigNumber result35 = test6.tMod(test5);
 //        System.out.println("2 digit negative and positive modding: result35: test6 % test5: " + result35.toString());
-//        BigNumber result36 = test5.divMod(test5);
+//        BigNumber result36 = test5.tMod(test5);
 //        System.out.println("a = m modding: result36: test5 % test5: " + result36.toString());
-//        BigNumber result37 = test11.divMod(test3);
+//        BigNumber result37 = test11.tMod(test3);
 //        System.out.println("0 mod 3 digit negative modding: result37: test11 % test3: " + result37.toString());
-//        BigNumber result38 = test11.divMod(test1);
+//        BigNumber result38 = test11.tMod(test1);
 //        System.out.println("0 mod 3 digit positive modding: result38: test11 % test1: " + result38.toString());
-//        BigNumber result39 = test11.divMod(test6);
+//        BigNumber result39 = test11.tMod(test6);
 //        System.out.println("0 mod 2 digit negative modding: result39: test11 % test6: " + result39.toString());
-//        BigNumber result40 = test11.divMod(test5);
+//        BigNumber result40 = test11.tMod(test5);
 //        System.out.println("0 mod 2 digit positive modding: result40: test11 % test5: " + result40.toString());
-//        BigNumber result41 = test12.divMod(test1);
+//        BigNumber result41 = test12.tMod(test1);
 //        System.out.println("Really big negative number mod 3 digit positive modding: result41: test12 % test1: " + result41.toString());
-//        BigNumber result42 = test1.divMod(test12);
+//        BigNumber result42 = test1.tMod(test12);
 //        System.out.println("3 digit positive and really big negative number modding: result42: test1 % test12: " + result42.toString());
         
 //        System.out.println("Testing the divide(BigNumber bigN) fucntion in general.....");
@@ -167,6 +167,29 @@ public class TestDriver2 {
 //        System.out.println("Really big negative number mod 3 digit positive division: result41: test12 / test1: " + result41.toString());
 //        BigNumber result42 = test1.divide(test12);
 //        System.out.println("3 digit positive and really big negative number division: result42: test1 / test12: " + result42.toString());
+        
+        
+//        System.out.println("Testing the tDivide(BigNumber bigN) method.....");
+//        BigNumber result43 = test1.tDivide(test5);
+//        System.out.println("result43: test1 / test5: 186/31 = " + result43.toString());
+//        BigNumber result44 = test5.tDivide(test1);
+//        System.out.println("result44: test5 / test1: 31/186 = " + result44.toString());
+//        BigNumber result45 = test1.tDivide(test6);
+//        System.out.println("result45: test1 / test6: 186/-26 = " + result45.toString());
+//        BigNumber result46 = test6.tDivide(test1);
+//        System.out.println("result46: test6 / test1: -26/186 = " + result46.toString());
+//        BigNumber result47 = test3.tDivide(test1);
+//        System.out.println("result47: test3 / test1: -268/186 = " + result47.toString());
+//        BigNumber result48 = test1.tDivide(test3);
+//        System.out.println("result48: test1 / test3: 186/-268 = " + result48.toString());
+//        BigNumber result49 = test1.tDivide(test1);
+//        System.out.println("result49: test1 / test1: 186/186 = " + result49.toString());
+//        BigNumber result50 = test3.tDivide(test6);
+//        System.out.println("result50: test3 / test6: -268/-26 = " + result50.toString());
+//        BigNumber result51 = test6.tDivide(test3);
+//        System.out.println("result51: test6 / test3: -26/-268 = " + result51.toString());
+//        BigNumber result52 = test6.tDivide(test6);
+//        System.out.println("result52: test6 / test6: -26/-26 = " + result52.toString());
         
         System.out.println("Testing the factor(BigNumber bigN) method.....");
         test1.factor();

@@ -8,10 +8,11 @@ package bigNumber;
  */
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class BigNumber {
 	
-	protected ArrayList<Integer> digits;
+	protected List<Integer> digits;
 	protected ArrayList<BigNumber> factors = new ArrayList<BigNumber>();
 	
     /**
@@ -46,8 +47,8 @@ public class BigNumber {
      * Private class to create a new BigNumber when you already have
      * the digits ArrayList.
      */
-    protected BigNumber(ArrayList<Integer> digits) {
-    	this.digits = digits;
+    protected BigNumber(List<Integer> numbers) {
+    	this.digits = (ArrayList<Integer>) numbers;
     }
 	
     /**
@@ -570,6 +571,110 @@ public class BigNumber {
     }
     
     /**
+     * this / bigN = c
+     * 
+     * @param bigN
+     * @return
+     */
+    public BigNumber tDivide(BigNumber bigN) {
+    	//work with positive numbers to make things easier
+    	int neg = 0;
+    	if(bigN.sign() == -1) {
+    		bigN.negate();
+    		neg++;
+    	}
+    	if(this.sign() == -1) {
+    		this.negate();
+    		neg++;
+    	}
+    		
+    	
+    	BigNumber quotient = new BigNumber();
+    	//if this < bigN return 0
+    	if(bigN.compareTo(this) == -1) 
+    		quotient.add(0);
+    	//else this > bigN so do some math
+    	else {
+    		BigNumber remainder = new BigNumber(this.toString());
+    		for(int i = remainder.size()-1; i >= 0; i--) {
+    			//fromIndex would be i
+    			//lastindex would be size (since this is exculisev)
+    			List<Integer> temp = remainder.digits.subList(i, remainder.size());
+    			BigNumber comparingNumbers = new BigNumber();
+    			comparingNumbers.digits = temp;
+    			int howMany = 0;
+    			//if the sublist comparingNumbers > bigN, subtract bigN from comparingNumbers until bigN > comparingNumbers
+    			//boolean subTest = (bigN.compareTo(comparingNumbers) == 1) || (bigN.compareTo(comparingNumbers) == 0);
+    			if((bigN.compareTo(comparingNumbers) == 1) || (bigN.compareTo(comparingNumbers) == 0)) {
+    				for(int t = 0; (bigN.compareTo(comparingNumbers) == 1) || (bigN.compareTo(comparingNumbers) == 0); t++) {
+    					//subtract bigN from comaringNumbers until bigN is greater again, keeping track of how many subtracts
+    					comparingNumbers = comparingNumbers.subtract(bigN);
+    					howMany = t+1;
+    				}
+    			}
+    			quotient.digits.add(0, howMany);
+    		}
+    	}
+    	quotient.normalize();
+    	
+    	//negate if only one is negative
+    	if(neg == 1) {
+    		quotient.negate();
+    	}
+    	//then return quotient
+    	return quotient;
+    }
+    
+    public BigNumber tMod(BigNumber bigN) {
+    	//work with positive numbers to make things easier
+    	int neg = 0;
+    	int neg2 = 0;
+    	if(bigN.sign() == -1) {
+    		bigN.negate();
+    		neg++;
+    	}
+    	if(this.sign() == -1) {
+    		this.negate();
+    		neg2++;
+    	}
+    		    	
+    	BigNumber remainder = new BigNumber();
+    	//if this < bigN and both are postiive return 0
+    	if(bigN.compareTo(this) == -1 && neg == 0 && neg2 == 0) 
+    		remainder = this;
+    	//else this > bigN so do some math
+    	else {
+    		//for when both numbers are either positive or negative
+    		BigNumber remainder2 = new BigNumber(this.toString());
+    		for(int i = remainder2.size()-1; i >= 0; i--) {
+    			//fromIndex would be i
+    			//lastindex would be size (since this is exculisev)
+    			
+    			List<Integer> temp = remainder2.digits.subList(i, remainder2.size());
+    			BigNumber comparingNumbers = new BigNumber();
+    			comparingNumbers.digits = temp;
+    			//if this is positive and greater than bigN...
+    			//if the sublist comparingNumbers > bigN, subtract bigN from comparingNumbers until bigN > comparingNumbers
+    			if((bigN.compareTo(comparingNumbers) == 1) || (bigN.compareTo(comparingNumbers) == 0)) {
+    				for(int t = 0; (bigN.compareTo(comparingNumbers) == 1) || (bigN.compareTo(comparingNumbers) == 0); t++) {
+    					//subtract bigN from comaringNumbers until bigN is greater again, keeping track of how many subtracts
+    					comparingNumbers = comparingNumbers.subtract(bigN);
+    				}
+    			}
+    			remainder = comparingNumbers;
+    		}
+    	}
+    	remainder.normalize();
+    	
+    	//negate if only one is negative
+    	if(neg == 1) {
+    		remainder.negate();
+    	}
+    	//then return remainder
+    	return remainder;
+    }
+    
+    /**
      * This method will factor a BigNumber. It returns nothing. instead it modifies a field 
      * factors in this class. factors lists all the factors in a BigNumber.
      */
@@ -579,14 +684,14 @@ public class BigNumber {
     	BigNumber two = new BigNumber("2"); //used to divide this in half
     	BigNumber zero = new BigNumber("0"); //used for comparisions
         
-    	BigNumber temp1 = copyOfThis.divide(two);
+    	BigNumber temp1 = copyOfThis.tDivide(two);
     	//divide the bignumber in half....
     	for(BigNumber i = new BigNumber("2"); (i.compareTo(temp1) == 1 || i.compareTo(temp1) == 0); i = i.add(one)) {  
     		//and check whether any number goes evenly into it
     		//one.normalize(); //one keeps getting many zeros in front of it whenever it goes back up to the for loop. 
     		//need to find a way to normalize it IN the for loop (as it grows EVERYTIME THE FOR LOOP IS CALLED) or fiz the 
     		//growing zeros. 
-    		if(copyOfThis.mod(i).compareTo(zero) == 0) {
+    		if(copyOfThis.tMod(i).compareTo(zero) == 0) {
     			//add the factor i to the arraylist  
     			factors.add(i);
     		}   		
