@@ -8,11 +8,12 @@ package bigNumber;
  */
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class BigNumber {
 	
-	protected ArrayList<Integer> digits;
-	protected ArrayList<BigNumber> factors = new ArrayList<BigNumber>();
+	protected List<Integer> digits;
+	protected List<BigNumber> factors = new ArrayList<BigNumber>();
 	
     /**
      * Constructor for class BigNumber. Transforms a string argument into an
@@ -46,7 +47,7 @@ public class BigNumber {
      * Private class to create a new BigNumber when you already have
      * the digits ArrayList.
      */
-    protected BigNumber(ArrayList<Integer> digits) {
+    protected BigNumber(List<Integer> digits) {
     	this.digits = digits;
     }
 	
@@ -515,6 +516,47 @@ public class BigNumber {
         
         System.out.println("It went somewhere where it should not have gone. :(");
         return bigN;
+    }
+    
+    /**
+     * This is probably horribly broken and will explode if you look
+     * at it the wrong way.
+     * @param bigN
+     * @return
+     */
+    public BigNumber jonDiv(BigNumber bigN) {
+    	BigNumber quotient = new BigNumber();
+    	BigNumber remainder = new BigNumber(this.toString());
+    	BigNumber dividend = new BigNumber(this.toString());
+    	int test = 1;
+    	
+    	while(test < dividend.digits.size()) {
+    		List<Integer> sub = dividend.digits.subList(0, test);
+    		BigNumber dividendPart = new BigNumber(sub);
+    		if(bigN.lessThan(dividendPart)) {
+    			test++;
+    			quotient.add(0);
+    		}
+    		else {
+    			int count = 0;
+    			BigNumber tmp = dividendPart;
+    			while(dividendPart.sign() > 0) {
+    				tmp = tmp.subtract(bigN);
+    				count++;
+    			}
+    			
+    			remainder = tmp.add(bigN);
+    			
+    			tmp.pad(dividendPart.size());
+    			for(int i = 0; i < tmp.size(); i++) {
+    				dividendPart.digits.set(i, tmp.digits.get(i));
+    			}
+    			quotient.add(count);
+    			test++;
+    		}
+    	}
+    	
+    	return null;
     }
     
     /**
