@@ -13,7 +13,7 @@ import java.util.List;
 public class BigNumber {
 	
 	protected List<Integer> digits;
-	protected ArrayList<BigNumber> factors = new ArrayList<BigNumber>();
+	protected List<BigNumber> factors = new ArrayList<BigNumber>();
 	
     /**
      * Constructor for class BigNumber. Transforms a string argument into an
@@ -47,6 +47,7 @@ public class BigNumber {
      * Private class to create a new BigNumber when you already have
      * the digits ArrayList.
      */
+
     protected BigNumber(List<Integer> numbers) {
     	this.digits = (ArrayList<Integer>) numbers;
     }
@@ -519,6 +520,47 @@ public class BigNumber {
     }
     
     /**
+     * This is probably horribly broken and will explode if you look
+     * at it the wrong way.
+     * @param bigN
+     * @return
+     */
+    public BigNumber jonDiv(BigNumber bigN) {
+    	BigNumber quotient = new BigNumber();
+    	BigNumber remainder = new BigNumber(this.toString());
+    	BigNumber dividend = new BigNumber(this.toString());
+    	int test = 1;
+    	
+    	while(test <= dividend.digits.size()) {
+    		List<Integer> sub = dividend.digits.subList(0, test);
+    		BigNumber dividendPart = new BigNumber(sub);
+    		if(dividendPart.lessThan(bigN)) {
+    			test++;
+    			quotient.add(0);
+    		}
+    		else {
+    			int count = 0;
+    			BigNumber tmp = dividendPart;
+    			while(tmp.sign() > 0) {
+    				tmp = tmp.subtract(bigN);
+    				count++;
+    			}
+    			
+    			remainder = tmp.add(bigN);
+    			tmp.normalize();
+    			tmp.pad(dividendPart.size());
+    			for(int i = 0; i < tmp.size(); i++) {
+    				dividendPart.digits.set(i, tmp.digits.get(i));
+    			}
+    			quotient.add(count);
+    			test++;
+    		}
+    	}
+    	
+    	return quotient;
+    }
+    
+    /**
      * This function will 'pad' the end of the ArrayList (or the beginning of the
      * number) with either 0s or 9s depending on whether the number si positive
      * or negative. Uses a comparison to another BigNumber array size to know
@@ -678,7 +720,7 @@ public class BigNumber {
      * This method will factor a BigNumber. It returns nothing. instead it modifies a field 
      * factors in this class. factors lists all the factors in a BigNumber.
      */
-    protected ArrayList<BigNumber> factor() {
+    protected List<BigNumber> factor() {
     	BigNumber copyOfThis = new BigNumber(this.toString());
     	BigNumber one = new BigNumber("1"); //used to increment i
     	BigNumber two = new BigNumber("2"); //used to divide this in half
