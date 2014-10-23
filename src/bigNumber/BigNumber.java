@@ -663,12 +663,6 @@ public class BigNumber {
     					temp.set(j, comparingNumbers.digits.get(j));
     				}
     			}
-    			//slowly replace remainder with the remainder
-    			//remove the first few digits until only one remains, then replace that one with the new digit
-    			for(int m = remainder.size()-1; m < comparingNumbers.size(); m--) {
-    				remainder.digits.add(m, 0);
-    			}
-    			remainder.digits.set(i, comparingNumbers.get(0));
     			quotient.digits.add(0, howMany);
     		}
     	}
@@ -717,6 +711,7 @@ public class BigNumber {
     					//subtract bigN from comaringNumbers until bigN is greater again, keeping track of how many subtracts
     					comparingNumbers = comparingNumbers.subtract(bigN);
     				}
+    				
     				comparingNumbers.normalize();
     				if(comparingNumbers.size() > temp.size()) {
     					System.out.println("Something bad just happened, we're going down!");
