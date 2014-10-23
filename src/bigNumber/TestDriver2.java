@@ -169,45 +169,48 @@ public class TestDriver2 {
 //        System.out.println("3 digit positive and really big negative number division: result42: test1 / test12: " + result42.toString());
         
         
-//        System.out.println("Testing the tDivide(BigNumber bigN) method.....");
-//        BigNumber result43 = test1.tDivide(test5);
-//        System.out.println("result43: test1 / test5: 186/31 = " + result43.toString());
-//        BigNumber result44 = test5.tDivide(test1);
-//        System.out.println("result44: test5 / test1: 31/186 = " + result44.toString());
-//        BigNumber result45 = test1.tDivide(test6);
-//        System.out.println("result45: test1 / test6: 186/-26 = " + result45.toString());
-//        BigNumber result46 = test6.tDivide(test1);
-//        System.out.println("result46: test6 / test1: -26/186 = " + result46.toString());
-//        BigNumber result47 = test3.tDivide(test1);
-//        System.out.println("result47: test3 / test1: -268/186 = " + result47.toString());
-//        BigNumber result48 = test1.tDivide(test3);
-//        System.out.println("result48: test1 / test3: 186/-268 = " + result48.toString());
-//        BigNumber result49 = test1.tDivide(test1);
-//        System.out.println("result49: test1 / test1: 186/186 = " + result49.toString());
-//        BigNumber result50 = test3.tDivide(test6);
-//        System.out.println("result50: test3 / test6: -268/-26 = " + result50.toString());
-//        BigNumber result51 = test6.tDivide(test3);
-//        System.out.println("result51: test6 / test3: -26/-268 = " + result51.toString());
-//        BigNumber result52 = test6.tDivide(test6);
-//        System.out.println("result52: test6 / test6: -26/-26 = " + result52.toString());
+        System.out.println("Testing the tDivide(BigNumber bigN) method.....");
+        BigNumber result43 = test1.tDivide(test5);
+        System.out.println("result43: test1 / test5: 186/31 = " + result43.toString());
+        BigNumber result44 = test5.tDivide(test1);
+        System.out.println("result44: test5 / test1: 31/186 = " + result44.toString());
+        BigNumber result45 = test1.tDivide(test6);
+        System.out.println("result45: test1 / test6: 186/-26 = " + result45.toString());
+        BigNumber result46 = test6.tDivide(test1);
+        System.out.println("result46: test6 / test1: -26/186 = " + result46.toString());
+        BigNumber result47 = test3.tDivide(test1);
+        System.out.println("result47: test3 / test1: -268/186 = " + result47.toString());
+        BigNumber result48 = test1.tDivide(test3);
+        System.out.println("result48: test1 / test3: 186/-268 = " + result48.toString());
+        BigNumber result49 = test1.tDivide(test1);
+        System.out.println("result49: test1 / test1: 186/186 = " + result49.toString());
+        BigNumber result50 = test3.tDivide(test6);
+        System.out.println("result50: test3 / test6: -268/-26 = " + result50.toString());
+        BigNumber result51 = test6.tDivide(test3);
+        System.out.println("result51: test6 / test3: -26/-268 = " + result51.toString());
+        BigNumber result52 = test6.tDivide(test6);
+        System.out.println("result52: test6 / test6: -26/-26 = " + result52.toString());
+        BigNumber result53 = test12.tDivide(test1);
+        System.out.println("result53: test12 / test1: -5107/186 = " + result53.toString());
         
-        System.out.println("Testing the factor(BigNumber bigN) method.....");
-        test1.factor();
-        System.out.println("The factors of test1 are: " + test1.factors);
-        test2.factor();
-        System.out.println("The factors of test2 are: " + test2.factors);
-        test3.factor();
-        System.out.println("The factors of test3 are: " + test3.factors);
-        test5.factor();
-        System.out.println("The factors of test5 are: " + test5.factors);
-        test7.factor();
-        System.out.println("The factors of test7 are: " + test7.factors);
-        test8.factor();
-        System.out.println("The factors of test8 are: " + test8.factors);
-        //berTest1.factor();
-        //System.out.println("The factors of berTest1 are: " + berTest1.factors);
-        berTest2.factor();
-        System.out.println("The factors of berTest2 are: " + berTest2.factors);
+        
+//        System.out.println("Testing the factor(BigNumber bigN) method.....");
+//        test1.factor();
+//        System.out.println("The factors of test1 are: " + test1.factors);
+//        test2.factor();
+//        System.out.println("The factors of test2 are: " + test2.factors);
+//        test3.factor();
+//        System.out.println("The factors of test3 are: " + test3.factors);
+//        test5.factor();
+//        System.out.println("The factors of test5 are: " + test5.factors);
+//        test7.factor();
+//        System.out.println("The factors of test7 are: " + test7.factors);
+//        test8.factor();
+//        System.out.println("The factors of test8 are: " + test8.factors);
+//        //berTest1.factor();
+//        //System.out.println("The factors of berTest1 are: " + berTest1.factors);
+//        berTest2.factor();
+//        System.out.println("The factors of berTest2 are: " + berTest2.factors);
         }
 
 }

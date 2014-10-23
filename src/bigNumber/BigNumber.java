@@ -654,6 +654,12 @@ public class BigNumber {
     					howMany = t+1;
     				}
     			}
+    			//slowly replace remainder with the remainder
+    			//remove the first few digits until only one remains, then replace that one with the new digit
+    			for(int m = remainder.size()-1; m < comparingNumbers.size(); m--) {
+    				remainder.digits.add(m, 0);
+    			}
+    			remainder.digits.set(i, comparingNumbers.get(0));
     			quotient.digits.add(0, howMany);
     		}
     	}
