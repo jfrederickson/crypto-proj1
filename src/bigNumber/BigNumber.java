@@ -606,7 +606,14 @@ public class BigNumber {
 	                //can be removed
 	            	digits.remove(digits.size()-1);
 	                //call this again to remove anymore 0s.
-	                normalize();
+	            	try {
+	            		normalize();
+//	            		System.out.println(this);
+	            	}
+	                catch(StackOverflowError e) {
+	                	System.out.println("Toooo big! Current value: " + this.toString());
+	                	throw e;
+	                }
 	            }
 	        }
     	}
@@ -740,13 +747,13 @@ public class BigNumber {
      */
     protected List<BigNumber> factor() {
     	BigNumber copyOfThis = new BigNumber(this.toString());
-    	BigNumber one = new BigNumber("1"); //used to increment i
+    	//BigNumber one = new BigNumber("1"); //used to increment i
     	BigNumber two = new BigNumber("2"); //used to divide this in half
     	BigNumber zero = new BigNumber("0"); //used for comparisions
         
     	BigNumber temp1 = copyOfThis.tDivide(two);
     	//divide the bignumber in half....
-    	for(BigNumber i = new BigNumber("2"); (i.compareTo(temp1) == 1 || i.compareTo(temp1) == 0); i = i.add(one)) {  
+    	for(BigNumber i = new BigNumber("2"); (i.compareTo(temp1) == 1 || i.compareTo(temp1) == 0); i = i.add(new BigNumber("1"))) {  
     		//and check whether any number goes evenly into it
     		//one.normalize(); //one keeps getting many zeros in front of it whenever it goes back up to the for loop. 
     		//need to find a way to normalize it IN the for loop (as it grows EVERYTIME THE FOR LOOP IS CALLED) or fiz the 
