@@ -751,9 +751,9 @@ public class BigNumber {
     	BigNumber two = new BigNumber("2"); //used to divide this in half
     	BigNumber zero = new BigNumber("0"); //used for comparisions
         
-    	BigNumber temp1 = copyOfThis.tDivide(two);
+    	BigNumber upperLimit = copyOfThis.tDivide(two);
     	//divide the bignumber in half....
-    	for(BigNumber i = new BigNumber("2"); (i.compareTo(temp1) == 1 || i.compareTo(temp1) == 0); i = i.add(new BigNumber("1"))) {  
+    	for(BigNumber i = new BigNumber("2"); (i.compareTo(upperLimit) == 1); i = i.add(new BigNumber("1"))) {  
     		//and check whether any number goes evenly into it
     		//one.normalize(); //one keeps getting many zeros in front of it whenever it goes back up to the for loop. 
     		//need to find a way to normalize it IN the for loop (as it grows EVERYTIME THE FOR LOOP IS CALLED) or fiz the 
@@ -761,6 +761,9 @@ public class BigNumber {
     		if(copyOfThis.tMod(i).compareTo(zero) == 0) {
     			//add the factor i to the arraylist  
     			factors.add(i);
+    			BigNumber factor2 = this.divide(i); // this/i is anohter factor so add it
+    			factors.add(factor2);
+    			upperLimit = factor2; //reassign upperLimit to reduce needless checks
     		}   		
     	}
     	//this is a factor of itself
