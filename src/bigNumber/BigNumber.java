@@ -653,6 +653,15 @@ public class BigNumber {
     					comparingNumbers = comparingNumbers.subtract(bigN);
     					howMany = t+1;
     				}
+    				
+    				comparingNumbers.normalize();
+    				if(comparingNumbers.size() > temp.size()) {
+    					System.out.println("Something bad just happened, we're going down!");
+    				}
+    				comparingNumbers.pad(temp.size());
+    				for(int j = 0; j < temp.size(); j++) {
+    					temp.set(j, comparingNumbers.digits.get(j));
+    				}
     			}
     			//slowly replace remainder with the remainder
     			//remove the first few digits until only one remains, then replace that one with the new digit
@@ -707,6 +716,14 @@ public class BigNumber {
     				for(int t = 0; (bigN.compareTo(comparingNumbers) == 1) || (bigN.compareTo(comparingNumbers) == 0); t++) {
     					//subtract bigN from comaringNumbers until bigN is greater again, keeping track of how many subtracts
     					comparingNumbers = comparingNumbers.subtract(bigN);
+    				}
+    				comparingNumbers.normalize();
+    				if(comparingNumbers.size() > temp.size()) {
+    					System.out.println("Something bad just happened, we're going down!");
+    				}
+    				comparingNumbers.pad(temp.size());
+    				for(int j = 0; j < temp.size(); j++) {
+    					temp.set(j, comparingNumbers.digits.get(j));
     				}
     			}
     			remainder = comparingNumbers;
