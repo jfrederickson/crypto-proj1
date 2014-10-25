@@ -207,10 +207,10 @@ public class TestDriver2 {
         System.out.println("The factors of test7 are: " + test7.factors);
         test8.factor();
         System.out.println("The factors of test8 are: " + test8.factors);
-        berTest1.factor();
-        System.out.println("The factors of berTest1 are: " + berTest1.factors);
         berTest2.factor();
         System.out.println("The factors of berTest2 are: " + berTest2.factors);
+        berTest1.factor();
+        System.out.println("The factors of berTest1 are: " + berTest1.factors);
         }
 
 }

@@ -1,7 +1,14 @@
 package bigNumber;
 
 /**
- * This class represents a number, possibly larger than the length of an int.
+ * BigNumber class is designed with the intent to perform basic mathematical 
+ * operations on numbers which are too big to be stored into the Java int. It 
+ * acheives this by storing indiviual numbers of type Inetger into an ArrayList 
+ * of type Integer. The numbers are taken from a string provided by the user and
+ * then stored in the ArrayList with the least signifcant digit in slot 0. This 
+ * makes for easy computation later on. Current mathematical operations include 
+ * adding, subtracting, dividing, multiplying, comparing, and modding two BigNumber as well 
+ * as normalizing BigNumbers.
  * 
  * @author Jonathan Frederickson
  * @author Tara Crittenden
@@ -12,7 +19,9 @@ import java.util.List;
 
 public class BigNumber {
 	
+	//storage for the BigNumber
 	protected List<Integer> digits;
+	//storage for the factors of the BigNumber
 	protected List<BigNumber> factors = new ArrayList<BigNumber>();
 	
     /**
@@ -27,12 +36,12 @@ public class BigNumber {
         //fill the newly created ArrayList of Integers
         fillNumbers(s);
         
+        //setting up the factors of an ArrayList. Every BigNumber is a factor of 1
         //to avoid recursively calling this constructor, call the other one and add 1 to the BigNumber
         BigNumber one = new BigNumber();
         one.digits.add(1);
         factors.add(one); //to be used later in finding the factors of a BigNumber.
     }
-	
 	
     /**
      * Private Constructor for class BigNumber used only by BigNumber. Instantiates
@@ -47,7 +56,6 @@ public class BigNumber {
      * Private class to create a new BigNumber when you already have
      * the digits ArrayList.
      */
-
     protected BigNumber(List<Integer> numbers) {
     	this.digits = (ArrayList<Integer>) numbers;
     }
@@ -69,14 +77,6 @@ public class BigNumber {
             digits.add(num);
         }
     }
-    
-    /**
-     * Do we need this?
-     * @param num
-     */
-	public BigNumber(int num) {
-		
-	}
 	
 	/**
      * Adds two BigNumbers together. Takes this BigNumber and a new BigNumber
@@ -139,24 +139,23 @@ public class BigNumber {
      * @return add(bigN) : the result of the subtraction
      */
     protected BigNumber subtract(BigNumber bigN) {
-    	if(bigN == this) return new BigNumber("0");
+    	if(bigN == this) 
+    		return new BigNumber("0");
     	
         //subtracting is the same as adding a negative number, so negate the given
         //BigNumber and pass it through to add(bigN).
     	bigN.negate();
         BigNumber result =  add(bigN);
-        bigN.negate(); // Negate bigN again to avoid ugly side effects
+        bigN.negate(); // Negate bigN again to return the correct result
         return result;
     }
 	
-	/**
-	 * Compares two BigNumbers for equality.
-	 * Side effect: This BigNumber and the one passed to this method will
-	 * be normalized.
+	/** Jon: comment please.
+	 * Compares two BigNumbers to each other. 
 	 * @param cmp
 	 * @return True if two BigNumbers are equal, false otherwise
 	 */
-	public boolean equals(BigNumber cmp) {
+	private boolean equals(BigNumber cmp) {
 		// Both BigNumbers must be normalized - show standard
 		// representation of number
 		normalize();
@@ -173,10 +172,10 @@ public class BigNumber {
 		return true;
 	}
 	
-	/**
+	/** Jon: comment please.
 	 * Negates this BigNumber using ten's complement notation
 	 */
-	public void negate() {
+	private void negate() {
 		if(sign() == 0) return;
 		int len = digits.size();
 		int count = 0;
@@ -199,7 +198,7 @@ public class BigNumber {
 //		digits.set(0, 1 + digits.get(0));
 	}
 	
-	/**
+	/** Jon: comment please. 
 	 * Multiplies two BigNumbers together
 	 * TODO: Implement shift-and-add
 	 * @param mult The number to multiply by
@@ -250,73 +249,35 @@ public class BigNumber {
 	}
 	
 	/**
-	 * Divides one BigNumber by another
-	 * TODO: Implement shift-and-subtract
-	 * @param div The number to divide by
-	 * @return the result of this BigNumber / the parameter
+	 * This method will return the quotient of this BigNumber and another in the
+	 * format 'this'/bigN. The result is a BigNumber.  In the case of 0 /
+     * (any BigNumber) or (any BigNumber) / 0, it returns 0. Uses tDivide(BigNumber bigN), 
+     * a shared method with mod(BigNumber bigN), returning the first index of the array. 
+	 * 
+	 * @param bigN : The BigNumber to be divided by this.
+     * @returns The quotient of 'this' / bigN.
 	 */
 	public BigNumber divide(BigNumber div) {
-		BigNumber[] result = divShared(div);
+		BigNumber[] result = tDivide(div);
 		return result[0];
 	}
 	
-	public BigNumber divMod(BigNumber div) {
-		BigNumber[] result = divShared(div);
+	/**
+     * This method will return the mod of this BigNumber and another in the 
+     * format 'this' mod bigN. The result is a BigNumber. In the case of 0 mod
+     * (any BigNumber), it returns 0. This method does not handle any negative modding, so
+     * caution is advised when using this mod. Uses tDivide(BigNumber bigN), a shared method
+     * with divide(BigNumber bigN), returning the second index of the array.
+     * 
+	 * @param bigN : The BigNumber to be modded to this.
+     * @returns The mod of this.
+	 */
+	public BigNumber mod(BigNumber div) {
+		BigNumber[] result = tDivide(div);
 		return result[1];
 	}
 	
-	private BigNumber[] divShared(BigNumber divisor) {
-		// Normalize both BigNumbers
-		normalize();
-		divisor.normalize();
-		// Counter to determine if the end result is negative
-		int negcount = 0;
-		// This may be necessary to fix mod, not sure yet
-		boolean negdenom = false;
-		
-		// Copy them so we don't accidentally do things to the originals
-		BigNumber numerator = new BigNumber(this.toString());
-		BigNumber div = new BigNumber(divisor.toString());
-		
-		// Dividing by zero here, return empty stuff
-		if(div.sign() == 0) return new BigNumber[2];
-		
-		// Check for negative numerator and denominator
-		if(numerator.sign() == -1) {
-			numerator.negate();
-			negcount++;
-		}
-		if(div.sign() == -1) {
-			div.negate();
-			negdenom = true;
-			negcount++;
-		} 
-		
-		// Result counter
-		BigNumber result = new BigNumber("0");
-		// Just for convenience
-		BigNumber one = new BigNumber("1");
-		
-		// As long as this BigNum is greater than the divisor, subtract div from the result
-		while(numerator.greaterThan(div) || numerator.equals(div)) {
-			result = result.add(one);
-			one.normalize();
-			numerator = numerator.subtract(div);
-		}
-		
-		// The end result is negative because one of the two
-		// (numerator and denominator) is negative
-		if(negcount == 1) {
-			result.negate();
-		}
-		// FIXME: Mod currently has issues with negative numbers. This is probably wrong.
-		if(negdenom) {
-			numerator.negate();
-		}
-		return new BigNumber[]{result, numerator};
-	}
-
-	/**
+	/** Jon: comment please.
 	 * Checks the sign of this BigNumber
 	 * @return -1 if this BigNumber is negative, 1 if positive, 0 if zero
 	 */
@@ -339,7 +300,7 @@ public class BigNumber {
 		return 0;
 	}
 	
-	/**
+	/** Jon: comment please.
 	 * Compares the size of two BigNumbers
 	 * Side effects: Both BigNumbers being compared will be normalized
 	 * @param cmp
@@ -380,7 +341,7 @@ public class BigNumber {
 		}
 	}
 	
-	/**
+	/** Jon: comment please
 	 * 
 	 * @param cmp
 	 * @return true if this BigNumber is greater than cmp
@@ -392,7 +353,7 @@ public class BigNumber {
 		return false;
 	}
 	
-	/**
+	/** Jon: comment please
 	 * 
 	 * @param cmp
 	 * @return true if this BigNumber is less than cmp
@@ -403,166 +364,10 @@ public class BigNumber {
 		}
 		return false;
 	}
-	
-	
-	/**
-     * This method will return the mod of this BigNumber and another in the 
-     * format this mod bigN. The result is a BigNumber. In the case of (any BigNumber)
-     * mod 0, it returns an empty BigNumber object that is not null. In the case of 0 mod
-     * (any BigNumber), it returns 0. This method mimics Python's and Google's 
-     * algorithm for mod, and thus will produce the same result as theirs.
-     * 
-     * More description in algorthim later....
-     * 
-     * @param bigN : The BigNumber to be modded to this.
-     * @returns The mod of this.
-     */
-    protected BigNumber mod(BigNumber bigN) {
-        BigNumber tempA = new BigNumber(this.toString());
-        BigNumber tempM = new BigNumber(bigN.toString());
-        BigNumber result = new BigNumber();
-        // a mod m = r
-        
-        //if a = 0, then 0 mod m, then return 0
-        if(tempA.sign() == 0)
-        	return new BigNumber("0");
-        //if m = 0, then a mod 0, then return exception
-        if(tempM.sign() == 0) {
-        	System.out.println("Error: Cannot mod by 0. Returning an empty BigNumber object.");
-        	return result;
-        }
-        
-        //some boolean variables...
-        boolean Aneg = false;
-        boolean Mneg = false;
-        
-        //negate if nesscary
-        if(tempA.sign() == -1) {
-        	Aneg = true;
-        	tempA.negate();
-        }
-        if(tempM.sign() == -1) {
-        	Mneg = true;
-        	tempM.negate();
-        }
-        
-        //now starts the actual mathing part...
-        //check if either are negative
-        if(Aneg || Mneg) {
-        	if(Mneg && !Aneg) {
-        		//only m is negative
-        		if(tempA.compareTo(tempM) == -1) {
-        			// a > m
-        			result = tempA.subtract(tempM);
-        			tempM.normalize();
-        			tempM.negate();
-        			result = result.mod(tempM);
-        			return result;
-        		}
-        		else {
-        			// a < m
-        			result = tempA.subtract(tempM);
-        			tempM.normalize();
-        			return result;
-        		}
-        	}
-        	
-        	else if(Mneg && Aneg) {
-        		//both a and m are negative
-        		if(tempA.compareTo(tempM) == 1) {
-        			// a < m
-        			result = tempA;
-        			result.negate();
-        			return result;
-        		}
-        		else { 
-        			// a > m
-        			result = tempA.subtract(tempM);
-        			tempM.normalize();
-        			result = result.mod(tempM);
-        			result.negate();
-        			return result;
-        		}
-        	}
-        	else if(!Mneg && Aneg) {
-        		//only a is negative
-        		if(tempA.compareTo(tempM) == 1) {
-        			//a < m
-        			return tempM.subtract(tempA);
-        		}
-        		else {
-        			// a > m
-        			result = tempM.subtract(tempA);
-        			//add until the number is positive
-        			while(result.sign() == -1) {
-        				result = result.add(tempM);
-        				tempM.normalize();
-        			}
-        			return result;
-        		}
-        	}
-        	//do some math involving negative numbers
-        }
-        else {
-        	//both numbers are positive
-        	//testing a < m
-        	if(tempA.compareTo(tempM) == 1)
-        		return tempA;
-        	else { // (a-m) mod m 
-        		result = tempA.subtract(tempM);
-        		tempM.normalize();
-        		return result.mod(tempM);
-        	}
-        }
-        
-        System.out.println("It went somewhere where it should not have gone. :(");
-        return bigN;
-    }
-    
-    /**
-     * This is probably horribly broken and will explode if you look
-     * at it the wrong way.
-     * @param bigN
-     * @return
-     */
-    public BigNumber jonDiv(BigNumber bigN) {
-    	BigNumber quotient = new BigNumber();
-    	BigNumber remainder = new BigNumber(this.toString());
-    	BigNumber dividend = new BigNumber(this.toString());
-    	int test = 1;
-    	
-    	while(test <= dividend.digits.size()) {
-    		List<Integer> sub = dividend.digits.subList(0, test);
-    		BigNumber dividendPart = new BigNumber(sub);
-    		if(dividendPart.lessThan(bigN)) {
-    			test++;
-    			quotient.add(0);
-    		}
-    		else {
-    			int count = 0;
-    			BigNumber tmp = dividendPart;
-    			while(tmp.sign() > 0) {
-    				tmp = tmp.subtract(bigN);
-    				count++;
-    			}
-    			
-    			remainder = tmp.add(bigN);
-    			tmp.normalize();
-    			tmp.pad(dividendPart.size());
-    			for(int i = 0; i < tmp.size(); i++) {
-    				dividendPart.digits.set(i, tmp.digits.get(i));
-    			}
-    			quotient.add(count);
-    			test++;
-    		}
-    	}
-    	
-    	return quotient;
-    }
     
     /**
      * This function will 'pad' the end of the ArrayList (or the beginning of the
-     * number) with either 0s or 9s depending on whether the number si positive
+     * number) with either 0s or 9s depending on whether the number is positive
      * or negative. Uses a comparison to another BigNumber array size to know
      * how many digits to pad it with. Used on adding and subtracting two 
      * BigNumbers.
@@ -587,9 +392,9 @@ public class BigNumber {
      * +527 will still be represented as 0527 so as to avoid it meaning 483 in
      * tens complement.
      */
-    protected void normalize() {
+    private void normalize() {
     	if(digits.size() != 1) {
-	        //remove unnessacary 9s for any number starting with 5 or more
+	        //remove unnecessary 9s for any number starting with 5 or more
 	        if((digits.get(digits.size()-1)) == 9) {
 	            //if the second to last number is still greater then 5, then the 9
 	            //can be removed
@@ -599,92 +404,31 @@ public class BigNumber {
 	                normalize();
 	            }
 	        }
-	        //remove unnessacary 0s for any number starting with 4 or less
+	        //remove unnecessary 0s for any number starting with 4 or less
 	        else if((digits.get(digits.size()-1)) == 0) {
 	            if((digits.get(digits.size()-2)) < 5) {
 	                //if the second to last number is still less than 4, then the 0
 	                //can be removed
 	            	digits.remove(digits.size()-1);
 	                //call this again to remove anymore 0s.
-	            	try {
-	            		normalize();
-//	            		System.out.println(this);
-	            	}
-	                catch(StackOverflowError e) {
-	                	System.out.println("Toooo big! Current value: " + this.toString());
-	                	throw e;
-	                }
+	            	normalize();
 	            }
 	        }
     	}
     }
     
     /**
-     * this / bigN = c
+     * This method is used by both divide(BigNumber bigN) and mod(BigNumber bigN).
+     * Both methods are similar in that both involve alot of subtracting. Returns an 
+     * array of BigNumber containing both the quotient and remainder of bigN.
      * 
-     * @param bigN
-     * @return
+     * @param bigN : The BigNumber to be divided/modded
+     * @return An array of BigNumber with index 0 being the quotient and index 1 being the 
+     * 			remainder of bigN
      */
-    public BigNumber tDivide(BigNumber bigN) {
+    private BigNumber[] tDivide(BigNumber bigN) {
     	//work with positive numbers to make things easier
-    	int neg = 0;
-    	if(bigN.sign() == -1) {
-    		bigN.negate();
-    		neg++;
-    	}
-    	if(this.sign() == -1) {
-    		this.negate();
-    		neg++;
-    	}
-    		
-    	
-    	BigNumber quotient = new BigNumber();
-    	//if this < bigN return 0
-    	if(bigN.compareTo(this) == -1) 
-    		quotient.add(0);
-    	//else this > bigN so do some math
-    	else {
-    		BigNumber remainder = new BigNumber(this.toString());
-    		for(int i = remainder.size()-1; i >= 0; i--) {
-    			//fromIndex would be i
-    			//lastindex would be size (since this is exculisev)
-    			List<Integer> temp = remainder.digits.subList(i, remainder.size());
-    			BigNumber comparingNumbers = new BigNumber();
-    			comparingNumbers.digits = temp;
-    			int howMany = 0;
-    			//if the sublist comparingNumbers > bigN, subtract bigN from comparingNumbers until bigN > comparingNumbers
-    			//boolean subTest = (bigN.compareTo(comparingNumbers) == 1) || (bigN.compareTo(comparingNumbers) == 0);
-    			if((bigN.compareTo(comparingNumbers) == 1) || (bigN.compareTo(comparingNumbers) == 0)) {
-    				for(int t = 0; (bigN.compareTo(comparingNumbers) == 1) || (bigN.compareTo(comparingNumbers) == 0); t++) {
-    					//subtract bigN from comaringNumbers until bigN is greater again, keeping track of how many subtracts
-    					comparingNumbers = comparingNumbers.subtract(bigN);
-    					howMany = t+1;
-    				}
-    				
-    				comparingNumbers.normalize();
-    				if(comparingNumbers.size() > temp.size()) {
-    					System.out.println("Something bad just happened, we're going down!");
-    				}
-    				comparingNumbers.pad(temp.size());
-    				for(int j = 0; j < temp.size(); j++) {
-    					temp.set(j, comparingNumbers.digits.get(j));
-    				}
-    			}
-    			quotient.digits.add(0, howMany);
-    		}
-    	}
-    	quotient.normalize();
-    	
-    	//negate if only one is negative
-    	if(neg == 1) {
-    		quotient.negate();
-    	}
-    	//then return quotient
-    	return quotient;
-    }
-    
-    public BigNumber tMod(BigNumber bigN) {
-    	//work with positive numbers to make things easier
+    	//but keep track of which one is negative (for the mod portion)
     	int neg = 0;
     	int neg2 = 0;
     	if(bigN.sign() == -1) {
@@ -694,84 +438,91 @@ public class BigNumber {
     	if(this.sign() == -1) {
     		this.negate();
     		neg2++;
-    	}
-    		    	
+    	}   		
+    	
+    	BigNumber quotient = new BigNumber();
     	BigNumber remainder = new BigNumber();
-    	//if this < bigN and both are postiive return 0
-    	if(bigN.compareTo(this) == -1 && neg == 0 && neg2 == 0) 
-    		remainder = this;
+    	//if this < bigN return 0
+    	if(bigN.compareTo(this) == -1) {
+    		quotient.add(0);
+    		//if both are positive then remainder is this as well
+    		if(neg == 0 && neg2 == 0)
+    			remainder = this;
+    	}
     	//else this > bigN so do some math
     	else {
-    		//for when both numbers are either positive or negative
-    		BigNumber remainder2 = new BigNumber(this.toString());
-    		for(int i = remainder2.size()-1; i >= 0; i--) {
-    			//fromIndex would be i
-    			//lastindex would be size (since this is exculisev)
-    			
-    			List<Integer> temp = remainder2.digits.subList(i, remainder2.size());
-    			BigNumber comparingNumbers = new BigNumber();
+    		BigNumber copyOfThis = new BigNumber(this.toString());
+    		for(int i = copyOfThis.size()-1; i >= 0; i--) {
+    			//used as temp storage for the digit Arraylist in BigNumber
+    			//gets a sublist in the digit ArrayList of 'this'
+    			//the size of the sublist varies each iteration, depending on how large bigN is
+    			List<Integer> temp = copyOfThis.digits.subList(i, copyOfThis.size());
+    			BigNumber comparingNumbers = new BigNumber(); //used in the actual comparing of the numbers within digits
     			comparingNumbers.digits = temp;
-    			//if this is positive and greater than bigN...
+    			
+    			int howMany = 0; //counter for how many times subtract was called
     			//if the sublist comparingNumbers > bigN, subtract bigN from comparingNumbers until bigN > comparingNumbers
     			if((bigN.compareTo(comparingNumbers) == 1) || (bigN.compareTo(comparingNumbers) == 0)) {
     				for(int t = 0; (bigN.compareTo(comparingNumbers) == 1) || (bigN.compareTo(comparingNumbers) == 0); t++) {
     					//subtract bigN from comaringNumbers until bigN is greater again, keeping track of how many subtracts
     					comparingNumbers = comparingNumbers.subtract(bigN);
+    					howMany = t+1;
     				}
-    				
+    				//normalize then pad to 'this' size
     				comparingNumbers.normalize();
-    				if(comparingNumbers.size() > temp.size()) {
-    					System.out.println("Something bad just happened, we're going down!");
-    				}
     				comparingNumbers.pad(temp.size());
+    				
+    				
+    				//Jon, what's the logic behind this?
     				for(int j = 0; j < temp.size(); j++) {
     					temp.set(j, comparingNumbers.digits.get(j));
     				}
     			}
+    			quotient.digits.add(0, howMany);
     			remainder = comparingNumbers;
     		}
     	}
+    	quotient.normalize();
     	remainder.normalize();
     	
     	//negate if only one is negative
     	if(neg == 1) {
+    		quotient.negate();
     		remainder.negate();
     	}
-    	//then return remainder
-    	return remainder;
+    	//then return quotient and remainder
+    	return new BigNumber[] {quotient, remainder};
     }
     
     /**
      * This method will factor a BigNumber. It returns nothing. instead it modifies a field 
-     * factors in this class. factors lists all the factors in a BigNumber.
+     * factors in this class. factors lists all the factors in a BigNumber and is already pre-
+     * populated with 1 (as all numbers have the factor 1). Uses the divide and mod methods
+     * heavily.
      */
-    protected List<BigNumber> factor() {
+    protected void factor() {
     	BigNumber copyOfThis = new BigNumber(this.toString());
-    	//BigNumber one = new BigNumber("1"); //used to increment i
     	BigNumber two = new BigNumber("2"); //used to divide this in half
-    	BigNumber zero = new BigNumber("0"); //used for comparisions
-        
-    	BigNumber upperLimit = copyOfThis.tDivide(two);
-    	//divide the bignumber in half....
-    	for(BigNumber i = new BigNumber("2"); (i.compareTo(upperLimit) == 1); i = i.add(new BigNumber("1"))) {  
-    		//and check whether any number goes evenly into it
-    		//one.normalize(); //one keeps getting many zeros in front of it whenever it goes back up to the for loop. 
-    		//need to find a way to normalize it IN the for loop (as it grows EVERYTIME THE FOR LOOP IS CALLED) or fiz the 
-    		//growing zeros. 
-    		if(copyOfThis.tMod(i).compareTo(zero) == 0) {
-    			//add the factor i to the arraylist  
+    	BigNumber zero = new BigNumber("0"); //used for comparisons        
+    	BigNumber upperLimit = copyOfThis.divide(two);
+    	
+    	//divide the BigNumber in half....
+    	for(BigNumber i = two; (i.compareTo(upperLimit) == 1); i = i.add(new BigNumber("1"))) {  
+    		//and check whether any number goes evenly into it 
+    		if(copyOfThis.mod(i).compareTo(zero) == 0) {
+    			//add the factor i to the Arraylist  
     			factors.add(i);
-    			BigNumber factor2 = this.divide(i); // this/i is anohter factor so add it
+    			// (this/i) is another factor so add it.
+    			BigNumber factor2 = this.divide(i); 
     			factors.add(factor2);
     			upperLimit = factor2; //reassign upperLimit to reduce needless checks
     		}   		
     	}
     	//this is a factor of itself
     	factors.add(copyOfThis);
-    	//normalize the bignumbers as that get many 0s appended in front whilst adding to the arraylist
+    	//normalize the BigNumbers as they may have gotten 0s or 9s appended in front whilst adding to the list
     	for(BigNumber bn : factors)
     		bn.normalize();
-    	return factors;
     }
     
 	
@@ -807,6 +558,7 @@ public class BigNumber {
     private void add(int n) {
         digits.add(n);
     }
+    
 	
     /**
      * Returns the BigNumber in String format with the most significant number 
@@ -819,16 +571,6 @@ public class BigNumber {
         for(int i=digits.size()-1; i>=0; i--)
             s += digits.get(i).toString();
         return s;
-    }
-    
-    class DivResult {
-    	public BigNumber quotient;
-    	public BigNumber remainder;
-    	
-    	public DivResult(BigNumber quotient, BigNumber remainder) {
-    		this.quotient = quotient;
-    		this.remainder = remainder;
-    	}
     }
     
 }
