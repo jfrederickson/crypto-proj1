@@ -1,0 +1,13 @@
+jonathan@alpha:~/sources/crypto-proj1/src$ java bigNumber/TestDriver2
+Testing the addition of new Big Numbers....  
+tes1: 186 test2: 341 test3: 732 test4: 695 test5: 31 test6: 74 test7: 30 test8: 290 test9: 59 test10: 999 test11: 0 test12: 94893 berTest1: 2168211218041261 berTest2: 117852727
+
+Testing the factor(BigNumber bigN) method.....
+The factors of test1 are: [1, 2, 093, 3, 062, 06, 31, 186]
+The factors of test2 are: [1, 11, 31, 341]
+The factors of test3 are: [1, 268]
+The factors of test5 are: [1, 31]
+The factors of test7 are: [1, 2, 15, 3, 10, 05, 06, 30]
+The factors of test8 are: [1, 2, 145, 05, 058, 10, 29, 290]
+The factors of berTest1 are: [1, 46564013, 46564097, 2168211218041261]
+The factors of berTest2 are: [1, 10853, 10859, 117852727]
