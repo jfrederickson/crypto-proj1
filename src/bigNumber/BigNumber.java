@@ -88,7 +88,7 @@ public class BigNumber {
      * @return result : The resulting BigNumber of the addition of this BigNumber
      *          and bigN.
      */
-    protected BigNumber add(BigNumber bigN) {
+    public BigNumber add(BigNumber bigN) {
         //create a new empty BigNumber object
         BigNumber result = new BigNumber();
         //used for when the result is over 9. carryover is the tens place holder.
@@ -138,7 +138,7 @@ public class BigNumber {
      * @param bigN : BigNumber to be subtracted from this BigNumber.
      * @return add(bigN) : the result of the subtraction
      */
-    protected BigNumber subtract(BigNumber bigN) {
+    public BigNumber subtract(BigNumber bigN) {
     	if(bigN == this) 
     		return new BigNumber("0");
     	
@@ -202,7 +202,6 @@ public class BigNumber {
 	
 	/**
 	 * Multiplies two BigNumbers together
-	 * TODO: Implement shift-and-add
 	 * @param mult The number to multiply by
 	 * @return the result of this BigNumber * the parameter
 	 */
@@ -285,7 +284,7 @@ public class BigNumber {
 	 * Checks the sign of this BigNumber
 	 * @return -1 if this BigNumber is negative, 1 if positive, 0 if zero
 	 */
-	public int sign() {
+	protected int sign() {
 		BigNumber tmp = new BigNumber(this.toString());
 		tmp.normalize();
 		
