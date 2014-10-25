@@ -1,0 +1,86 @@
+Various test cases for Java class BigNumber.
+
+
+Tara Crittenden
+Jonathan Frederickson
+
+
+The factors of berTest2 are: [1, 10853, 10859, 117852727]
+The factors of berTest1 are: [1, 46564013, 46564097, 2168211218041261]
+
+
+
+
+Testing the addition of new Big Numbers....
+tes1: 186
+test2: 341
+test3: 732
+test4: 695
+test5: 31
+test6: 74
+test7: 30
+test8: 290
+test9: 59
+test10: 999
+test11: 0
+test12: 94893
+berTest1: 2168211218041261
+berTest2: 117852727
+
+
+Testing the add(BigNumber bigN) function with BigNumbers of varying lengths....
+3 digit positive addition: result1 = test1 + test2: 0527
+3 digit pos/neg addition: result2 = test3 + test2: 073
+3 digit negative addition: result3 = test3 + test4: 9427
+3 and 2 digit positive addition: result4 = test1 + test5: 217
+3 and 2 digit negative addition: result5 = test3 + test6: 706
+3 digit positive and 2 digit negative addition: result6 = test1 + test6: 160
+3 digit negative and 2 digit positive addition: result7 = test3 + test5: 763
+2 digit positive ending in 0 and 2 digit positive addition: result8 = test7 + test5: 061
+2 digit positive ending in 0 and 2 digit negative addition: result9 = test7 + test6: 4
+2 digit positive ending in 0 and 3 digit positive addition: result10 = test7 + test1: 216
+2 digit positive ending in 0 and 3 digit negative addition: result11 = test7 + test4: 725
+3 digit positive ending in 0 and 2 digit positive addition: result12 = test8 + test5: 321
+3 digit positive ending in 0 and 2 digit negative addition: result13 = test8 + test6: 264
+3 digit positive ending in 0 and 3 digit positive addition: result14 = test8 + test1: 476
+3 digit positive ending in 0 and 3 digit negative addition: result15 = test8 + test4: 85
+2 digit positive ending in 9 and 2 digit positive addition: result16 = test9 + test5: 90
+2 digit positive ending in 9 and 2 digit negative addition: result17 = test9 + test6: 933
+2 digit positive ending in 9 and 3 digit positive addition: result18 = test9 + test1: 145
+2 digit positive ending in 9 and 3 digit negative addition: result19 = test9 + test4: 654
+3 digit positive ending in 9 and 2 digit positive addition: result20 = test10 + test5: 30
+3 digit positive ending in 9 and 2 digit negative addition: result21 = test10 + test6: 73
+3 digit positive ending in 9 and 3 digit positive addition: result22 = test10 + test1: 185
+3 digit positive ending in 9 and 3 digit negative addition: result23 = test10 + test4: 694
+
+Testing the mod(BigNumber bigN) function in general.....
+3 digit positive modding: result24: test1 % test2: 186
+3 digit positive modding: result25: test2 % test1: 155
+2 digit positive modding: result26: test5 % test7: 1
+2 digit positive modding: result27: test7 % test5: 30
+a = m modding: result36: test5 % test5: 0
+0 mod 3 digit positive modding: result38: test11 % test1: 0
+0 mod 2 digit positive modding: result40: test11 % test5: 0
+
+Testing the tDivide(BigNumber bigN) method.....
+result43: test1 / test5: 186/31 = 06
+result44: test5 / test1: 31/186 = 0
+result45: test1 / test6: 186/-26 = 93
+result46: test6 / test1: -26/186 = 0
+result47: test3 / test1: -268/186 = 1
+result48: test1 / test3: 186/-268 = 0
+result49: test1 / test1: 186/186 = 1
+result50: test3 / test6: -268/-26 = 10
+result51: test6 / test3: -26/-268 = 0
+result52: test6 / test6: -26/-26 = 1
+result53: test12 / test1: -5107/186 = 27
+
+Testing the factor(BigNumber bigN) method.....
+The factors of test1 are: [1, 2, 093, 3, 062, 06, 31, 186]
+The factors of test2 are: [1, 11, 31, 341]
+The factors of test3 are: [1, 2, 134, 4, 067, 268]
+The factors of test5 are: [1, 31]
+The factors of test7 are: [1, 2, 15, 3, 10, 05, 06, 30]
+The factors of test8 are: [1, 2, 145, 05, 058, 10, 29, 290]
+The factors of berTest2 are: [1, 10853, 10859, 117852727]
+The factors of berTest1 are: [1, 46564013, 46564097, 2168211218041261]
