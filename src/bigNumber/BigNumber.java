@@ -150,7 +150,7 @@ public class BigNumber {
         return result;
     }
 	
-	/** Jon: comment please.
+	/**
 	 * Compares two BigNumbers to each other. 
 	 * @param cmp
 	 * @return True if two BigNumbers are equal, false otherwise
@@ -167,38 +167,40 @@ public class BigNumber {
 		// No need for the expensive loop
 		if(cmp.digits.size() != len) return false;
 		
+		// compareTo() will return 0 if equal
 		if(compareTo(cmp) != 0) return false;
 		
 		return true;
 	}
 	
-	/** Jon: comment please.
+	/**
 	 * Negates this BigNumber using ten's complement notation
+	 * Uses the algorithm discussed in class
 	 */
 	private void negate() {
+		// BigNumber is 0, we don't need to worry about negating
 		if(sign() == 0) return;
+		
 		int len = digits.size();
 		int count = 0;
 		
+		// Scan from low order digit, copy (ignore) zeroes
 		while(digits.get(count) == 0) {
 			count++;
 		}
 		
+		// First nonzero: subtract from 10
 		digits.set(count, 10 - digits.get(count));
 		count++;
 		
+		// All remaining digits: subtract from 9
 		while(count < len) {
-			// Replace each digit in list with 9-itself
-			// (Nine's complement)
 			digits.set(count, 9 - digits.get(count));
 			count++;
 		}
-		
-		// Add one (ten's complement)
-//		digits.set(0, 1 + digits.get(0));
 	}
 	
-	/** Jon: comment please. 
+	/**
 	 * Multiplies two BigNumbers together
 	 * TODO: Implement shift-and-add
 	 * @param mult The number to multiply by
@@ -222,6 +224,7 @@ public class BigNumber {
 		
 		if(mult.sign() == 0) return mult; // Multiplier is 0, result is 0
 		
+		// Multiplier is negative; negate while we're doing calculations
 		else if(mult.sign() == -1) {
 			mult.negate();
 			negative = true;
@@ -241,6 +244,7 @@ public class BigNumber {
 			result.normalize();
 		}
 		result.normalize();
+		// Multiplier was negative, so we need to negate
 		if(negative) {
 			result.negate();
 			return result;
@@ -277,7 +281,7 @@ public class BigNumber {
 		return result[1];
 	}
 	
-	/** Jon: comment please.
+	/**
 	 * Checks the sign of this BigNumber
 	 * @return -1 if this BigNumber is negative, 1 if positive, 0 if zero
 	 */
@@ -288,7 +292,9 @@ public class BigNumber {
 		int len = tmp.digits.size();
 		int num = tmp.digits.get(len-1); // Most significant digit
 		
+		// High order digit greater than 5, result is negative
 		if(num >= 5) return -1;
+		// High order digit less than 5, result is positive
 		else if(num < 5 && num > 0) return 1;
 		
 		// Leading digit is zero, check if there are digits
@@ -300,7 +306,7 @@ public class BigNumber {
 		return 0;
 	}
 	
-	/** Jon: comment please.
+	/**
 	 * Compares the size of two BigNumbers
 	 * Side effects: Both BigNumbers being compared will be normalized
 	 * @param cmp
@@ -341,8 +347,8 @@ public class BigNumber {
 		}
 	}
 	
-	/** Jon: comment please
-	 * 
+	/**
+	 * Used to determine if this BigNumber is greater than another
 	 * @param cmp
 	 * @return true if this BigNumber is greater than cmp
 	 */
@@ -353,8 +359,8 @@ public class BigNumber {
 		return false;
 	}
 	
-	/** Jon: comment please
-	 * 
+	/**
+	 * Used to determine if this BigNumber is less than another
 	 * @param cmp
 	 * @return true if this BigNumber is less than cmp
 	 */
